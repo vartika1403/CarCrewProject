@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Response response) throws IOException {
 
                 Log.d("Response handler", response.body().string());
+                String responseData = response.body().string();
+                MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
+                Log.i(LOG_TAG, "the mainWeatherclass, " + mainWeatherClass);
+                Log.i(LOG_TAG, "city, " + mainWeatherClass.getCity());
             }
         });
     }
