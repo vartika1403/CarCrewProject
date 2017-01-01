@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private OkHttpClient client;
+    private String url ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
