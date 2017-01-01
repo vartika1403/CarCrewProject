@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.vartikasharma.mynewproject">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,10 +18,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".DownloadService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>
