@@ -8,8 +8,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client;
     private String url;
     private Gson gson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +35,24 @@ public class MainActivity extends AppCompatActivity {
         url = urlBuilder.build().toString();
         Log.i(LOG_TAG, "the url, " + url);
 
-        loadContent();
+      // loadContent();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                Log.d("Response handler", response.body().string());
+            }
+        });
     }
+
     private void loadContent() {
         new AsyncTask<Void, Void, Void>() {
             @Override
