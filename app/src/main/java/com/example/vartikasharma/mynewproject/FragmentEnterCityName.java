@@ -44,5 +44,6 @@ public class FragmentEnterCityName extends Fragment {
             Toast.makeText(getActivity(), "Please enter city name to proceed", Toast.LENGTH_LONG).show();
             return;
         }
+        ((MainActivity)getActivity()).openFragmentWeatherDisplay(cityName);
     }
 }
