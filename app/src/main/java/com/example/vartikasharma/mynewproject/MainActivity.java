@@ -1,14 +1,15 @@
 package com.example.vartikasharma.mynewproject;
 
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -17,16 +18,24 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private OkHttpClient client;
     private String url;
     private Gson gson;
+    private FragmentEnterCityName fragmentEnterCityName;
+
+    @BindView(R.id.fragment_container)
+    FrameLayout fragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         client = new OkHttpClient();
         gson = new GsonBuilder().create();
 
@@ -36,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
         url = urlBuilder.build().toString();
         Log.i(LOG_TAG, "the url, " + url);
 
+        fragmentEnterCityName = new FragmentEnterCityName();
+        openFragmentEnterCityName();
+
       // loadContent();
-        Request request = new Request.Builder()
+        /*Request request = new Request.Builder()
                 .url(url)
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -51,11 +63,17 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("Response handler", response.body().string());
                 String responseData = response.body().string();
-                MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
+               *//* MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
                 Log.i(LOG_TAG, "the mainWeatherclass, " + mainWeatherClass);
-                Log.i(LOG_TAG, "city, " + mainWeatherClass.getCity());
+                Log.i(LOG_TAG, "city, " + mainWeatherClass.getCity());*//*
             }
-        });
+        });*/
+    }
+
+    private void openFragmentEnterCityName() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragmentEnterCityName);
+        fragmentTransaction.commit();
     }
 
     private void loadContent() {

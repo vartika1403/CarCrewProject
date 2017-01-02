@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.example.vartikasharma.mynewproject.FragmentEnterCityName">
+
+    <TextView
+        android:text="@string/enter_your_city_name"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edit_text_city_name"
+        android:layout_width="wrap_content"
+        android:inputType="text"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:layout_height="wrap_content"
+        android:hint="enter city name" />
+
+    <Button
+        android:id="@+id/go_button"
+        android:text="@string/go"
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

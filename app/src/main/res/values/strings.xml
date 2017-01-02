@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyNewProject</string>
+    <string name="enter_your_city_name">Enter your city name here</string>
+    <string name="go">GO</string>
 </resources>
