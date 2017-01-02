@@ -82,10 +82,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openFragmentWeatherDisplay(String cityName) {
-        FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
-        fragmentTransaction.commit();
+        getCurrentWhether(cityName);
+    }
+
+    public void getCurrentWhether(final String cityName){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.openweathermap.org/data/2.5/weather?q="+cityName).newBuilder();
+        urlBuilder.addQueryParameter("APPID", "ed34795f35c87eb45c31e75d6b56ea43");
+        url = urlBuilder.build().toString();
+
+        // loadContent();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Log.d("Response handler", response.body().string());
+                //String responseData = response.body().string();
+                /*FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
+                fragmentTransaction.commit();*/
+               // MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
+            }
+        });
+
     }
 
     private void loadContent() {
