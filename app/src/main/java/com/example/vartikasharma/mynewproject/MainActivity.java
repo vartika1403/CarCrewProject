@@ -12,11 +12,19 @@ import android.widget.FrameLayout;
 import com.example.vartikasharma.mynewproject.utils.NetworkCalls;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
@@ -103,6 +111,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response response) throws IOException {
                 Log.d("Response handler", response.body().string());
+                try {
+                   // JSONArray jsonarray = new JSONArray(response.body().toString());
+                    JSONParser parser_obj = new JSONParser();
+                    JsonObject jsonObject = (JsonObject) parser_obj.parse("\n" + response.body().toString());
+                  //  JSONObject jsonObj = new JSONObject(response.body().toString().trim());
+                   // JSONArray jsonArray = jsonObj.getJSONArray("main");
+                    //Log.i(LOG_TAG, "the jsonArray, " + jsonArray);
+                    //jsonArray.getJSONObject(0);
+
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 //String responseData = response.body().string();
                 /*FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
