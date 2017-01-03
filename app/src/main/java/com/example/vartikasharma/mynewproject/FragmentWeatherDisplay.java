@@ -1,10 +1,12 @@
 package com.example.vartikasharma.mynewproject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -70,6 +72,12 @@ public class FragmentWeatherDisplay extends Fragment {
         textCityTemp.setText(temp + (char) 0x00B0 );
         textCityPressure.setText(String.valueOf(cityPressure));
         textCityHumidity.setText(String.valueOf(cityHumidity));
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         return view;
     }
 }
