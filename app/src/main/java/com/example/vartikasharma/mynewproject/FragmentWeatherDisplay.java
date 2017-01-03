@@ -69,14 +69,12 @@ public class FragmentWeatherDisplay extends Fragment {
         textCityName.setText(cityName);
         double cityTempCelsius = convertTemp(cityTemp);
         String temp = String.format("%.2f", cityTempCelsius);
-        textCityTemp.setText(temp + (char) 0x00B0 );
-        textCityPressure.setText(String.valueOf(cityPressure));
-        textCityHumidity.setText(String.valueOf(cityHumidity));
+        textCityTemp.setText("Temp:" + temp + (char) 0x00B0 );
+        textCityPressure.setText("Pressure:" + String.valueOf(cityPressure));
+        textCityHumidity.setText("Humidity:" + String.valueOf(cityHumidity));
 
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         return view;
     }

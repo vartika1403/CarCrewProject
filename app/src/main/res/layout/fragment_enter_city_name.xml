@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/first_background"
     tools:context="com.example.vartikasharma.mynewproject.FragmentEnterCityName">
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:background="@drawable/first_fragment_background"
     android:orientation="vertical"
     >
 
