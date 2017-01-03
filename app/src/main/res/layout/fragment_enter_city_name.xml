@@ -48,18 +48,19 @@
 <FrameLayout
         android:id="@+id/progressBarHolder"
         android:animateLayoutChanges="true"
-        android:visibility="gone"
         android:alpha="0.4"
+        android:visibility="gone"
         android:background="#000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:layout_gravity="center" />
+            android:layout_marginTop="100dp"
+            android:layout_gravity="top" />
     </FrameLayout>
 
     </RelativeLayout>
