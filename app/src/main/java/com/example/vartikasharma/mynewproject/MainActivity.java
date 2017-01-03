@@ -1,30 +1,23 @@
 package com.example.vartikasharma.mynewproject;
 
 import android.app.FragmentTransaction;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-
-import com.example.vartikasharma.mynewproject.utils.NetworkCalls;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
@@ -36,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client;
     private String url;
     private Gson gson;
+    private Double temp;
     private FragmentEnterCityName fragmentEnterCityName;
 
     @BindView(R.id.fragment_container)
     FrameLayout fragmentContainer;
 
-    private NetworkCalls networkCalls = new NetworkCalls();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,34 +43,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         client = new OkHttpClient();
         gson = new GsonBuilder().create();
-
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.openweathermap.org/data/2.5/forecast/city?id=524901").newBuilder();
-//        urlBuilder.addQueryParameter("APPID", "ed34795f35c87eb45c31e75d6b56ea43");
-//
-//        url = urlBuilder.build().toString();
-//        Log.i(LOG_TAG, "the url, " + url);
-//
-//      // loadContent();
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .build();
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Request request, IOException e) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(Response response) throws IOException {
-//
-//                Log.d("Response handler", response.body().string());
-//                String responseData = response.body().string();
-//                MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
-//                Log.i(LOG_TAG, "the mainWeatherclass, " + mainWeatherClass);
-//                Log.i(LOG_TAG, "city, " + mainWeatherClass.getCity());
-//            }
-//        });
-
 
         fragmentEnterCityName = new FragmentEnterCityName();
         openFragmentEnterCityName();
@@ -111,25 +76,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response response) throws IOException {
                 Log.d("Response handler", response.body().string());
+                Log.d("Response, ",  response.message());
+                HttpHandler httpHandler = new HttpHandler();
+
+                String jsonStr = httpHandler.makeServiceCall(url);
+                Log.e(LOG_TAG, "Response from url: " + jsonStr);
                 try {
-                   // JSONArray jsonarray = new JSONArray(response.body().toString());
-                    JSONParser parser_obj = new JSONParser();
-                    JsonObject jsonObject = (JsonObject) parser_obj.parse("\n" + response.body().toString());
-                  //  JSONObject jsonObj = new JSONObject(response.body().toString().trim());
-                   // JSONArray jsonArray = jsonObj.getJSONArray("main");
-                    //Log.i(LOG_TAG, "the jsonArray, " + jsonArray);
-                    //jsonArray.getJSONObject(0);
-
-
-                } catch (ParseException e) {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    Log.i(LOG_TAG, "the json object, " + jsonObj);
+                    JSONObject mainObject = jsonObj.getJSONObject("main");
+                    Log.i(LOG_TAG, "the main object," + mainObject);
+                    temp = mainObject.getDouble("temp");
+                    Log.i(LOG_TAG, "the temp, " + temp);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //String responseData = response.body().string();
-                /*FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName);
+
+                FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName, temp);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
-                fragmentTransaction.commit();*/
-               // MainWeatherClass mainWeatherClass = gson.fromJson(responseData, MainWeatherClass.class);
+                fragmentTransaction.commit();
             }
         });
 
