@@ -1,11 +1,13 @@
 package com.example.vartikasharma.mynewproject;
 
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Gson gson;
     private Double temp;
     private FragmentEnterCityName fragmentEnterCityName;
+    private ProgressDialog progress;
 
     @BindView(R.id.fragment_container)
     FrameLayout fragmentContainer;
@@ -63,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         urlBuilder.addQueryParameter("APPID", "ed34795f35c87eb45c31e75d6b56ea43");
         url = urlBuilder.build().toString();
 
+        progress=new ProgressDialog(this);
+        progress.setMessage("Getting whether data");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
+        progress.setProgress(0);
+//        progress.show();
+
         // loadContent();
         Request request = new Request.Builder()
                 .url(url)
@@ -70,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
+//                progress.hide();
+//                Toast.makeText(this, "Can't fetch data", Toast.LENGTH_LONG).show();
 
             }
 
@@ -81,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String jsonStr = httpHandler.makeServiceCall(url);
                 Log.e(LOG_TAG, "Response from url: " + jsonStr);
+
+//                progress.hide();
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     Log.i(LOG_TAG, "the json object, " + jsonObj);
@@ -88,14 +102,20 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(LOG_TAG, "the main object," + mainObject);
                     temp = mainObject.getDouble("temp");
                     Log.i(LOG_TAG, "the temp, " + temp);
+
+                    FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName, temp);
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
+                    fragmentTransaction.commit();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+//                    Toast.makeText(this, "Can't fetch data", Toast.LENGTH_LONG).show();
+                } catch (NullPointerException e){
+                    e.printStackTrace();
+//                    Toast.makeText(this, "Can't fetch data", Toast.LENGTH_LONG).show();
                 }
 
-                FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName, temp);
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
-                fragmentTransaction.commit();
             }
         });
 
