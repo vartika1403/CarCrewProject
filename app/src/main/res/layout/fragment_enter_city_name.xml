@@ -2,17 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.vartikasharma.mynewproject.FragmentEnterCityName">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alpha="0.8"
     android:background="@drawable/first_fragment_background"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.vartikasharma.mynewproject.FragmentEnterCityName">
+    >
 
     <TextView
         android:layout_width="wrap_content"
