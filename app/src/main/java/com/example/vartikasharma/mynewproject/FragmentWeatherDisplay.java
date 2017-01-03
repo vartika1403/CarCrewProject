@@ -14,10 +14,12 @@ import butterknife.ButterKnife;
 public class FragmentWeatherDisplay extends Fragment {
     private static final String CITY_NAME = FragmentWeatherDisplay.class.getSimpleName() + ".city_name" ;
     private static final String CITY_TEMP = FragmentWeatherDisplay.class.getSimpleName() + ".temp";
+
     @BindView(R.id.text_city_name)
     TextView textCityName;
     @BindView(R.id.temperature)
     TextView textCityTemp;
+
     private String cityName;
     private Double cityTemp;
 
@@ -52,9 +54,7 @@ public class FragmentWeatherDisplay extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment_weather_display, container, false);
         ButterKnife.bind(this, view);
         textCityName.setText(cityName);
-        Log.i(CITY_NAME, "the temp, " + cityTemp);
         double cityTempCelsius = convertTemp(cityTemp);
-        Log.i(CITY_NAME, "the temp , " + cityTempCelsius);
         String temp = String.format("%.2f", cityTempCelsius);
         textCityTemp.setText(temp + (char) 0x00B0 );
         return view;

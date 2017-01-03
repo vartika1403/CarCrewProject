@@ -39,7 +39,6 @@ public class FragmentEnterCityName extends Fragment {
     @OnClick(R.id.go_button)
     public void clickGoButton() {
         String cityName = cityNameEditText.getText().toString();
-        Log.i(LOG_TAG, "city name, " + cityName);
         if (cityName.isEmpty()) {
             Toast.makeText(getActivity(), "Please enter city name to proceed", Toast.LENGTH_LONG).show();
             return;

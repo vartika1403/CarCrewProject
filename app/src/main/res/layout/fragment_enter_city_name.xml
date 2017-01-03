@@ -2,37 +2,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:alpha="0.8"
     android:background="@drawable/first_fragment_background"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.example.vartikasharma.mynewproject.FragmentEnterCityName">
 
     <TextView
-        android:text="@string/enter_your_city_name"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="@color/colorWhite"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/enter_your_city_name"
+        android:textColor="@color/colorWhite"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/edit_text_city_name"
         android:layout_width="wrap_content"
-        android:inputType="text"
-        android:gravity="center"
-        android:textColor="@color/colorWhite"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:layout_height="wrap_content"
-        android:hint="enter city name" />
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:hint="enter city name"
+        android:inputType="text"
+        android:textColor="@color/colorWhite" />
 
     <Button
         android:id="@+id/go_button"
-        android:text="@string/go"
-        android:textColor="@color/colorWhite"
-        android:background="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/go"
+        android:textColor="@color/colorWhite" />
 
 </LinearLayout>

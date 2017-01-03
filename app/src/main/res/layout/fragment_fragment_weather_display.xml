@@ -2,28 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:alpha="0.8"
-    android:gravity="bottom"
     android:background="@drawable/weather_background"
+    android:gravity="bottom"
+    android:orientation="vertical"
     tools:context="com.example.vartikasharma.mynewproject.FragmentWeatherDisplay">
 
     <TextView
         android:id="@+id/text_city_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:textSize="60sp"
         android:textColor="@color/colorWhite"
-        android:layout_gravity="start" />
+        android:textSize="60sp" />
 
     <TextView
         android:id="@+id/temperature"
-        android:layout_gravity="start"
-        android:textSize="60sp"
-        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:textColor="@color/colorWhite"
+        android:textSize="60sp" />
 
 </LinearLayout>
