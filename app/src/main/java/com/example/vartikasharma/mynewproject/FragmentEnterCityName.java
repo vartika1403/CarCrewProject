@@ -1,5 +1,6 @@
 package com.example.vartikasharma.mynewproject;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -21,6 +23,8 @@ public class FragmentEnterCityName extends Fragment {
     EditText cityNameEditText;
     @BindView(R.id.go_button)
     Button goButton;
+    @BindView(R.id.progressBarHolder)
+    FrameLayout progressBarHolder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,5 +48,13 @@ public class FragmentEnterCityName extends Fragment {
             return;
         }
         ((MainActivity)getActivity()).openFragmentWeatherDisplay(cityName);
+    }
+
+    public void showLoader(){
+        progressBarHolder.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoader(){
+        progressBarHolder.setVisibility(View.GONE);
     }
 }

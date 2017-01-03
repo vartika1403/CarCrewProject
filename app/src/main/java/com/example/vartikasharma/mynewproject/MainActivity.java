@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         urlBuilder.addQueryParameter("APPID", "ed34795f35c87eb45c31e75d6b56ea43");
         url = urlBuilder.build().toString();
 
+        fragmentEnterCityName.showLoader();
+
         Request request = new Request.Builder()
                 .url(url)
                 .build();
