@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/buttonColor"
         android:gravity="center"
-        android:hint="enter city name"
+        android:hint="@string/enter_city_name_edit_text"
         android:inputType="textCapWords"
         android:textColor="@color/colorWhite" />
 

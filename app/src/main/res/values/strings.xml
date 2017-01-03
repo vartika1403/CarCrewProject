@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">CurrentWeather</string>
+    <string name="app_name">Current Weather</string>
     <string name="enter_your_city_name">Enter your city name here</string>
     <string name="go">GO</string>
+    <string name="enter_city_name">Please enter city name to proceed</string>
+    <string name="enter_city_name_edit_text">enter city name</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.example.vartikasharma.mynewproject;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import butterknife.OnClick;
 
 
 public class FragmentEnterCityName extends Fragment {
-    private static  final String LOG_TAG = FragmentEnterCityName.class.getSimpleName();
     @BindView(R.id.edit_text_city_name)
     EditText cityNameEditText;
     @BindView(R.id.go_button)
@@ -44,7 +41,7 @@ public class FragmentEnterCityName extends Fragment {
     public void clickGoButton() {
         String cityName = cityNameEditText.getText().toString();
         if (cityName.isEmpty()) {
-            Toast.makeText(getActivity(), "Please enter city name to proceed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.enter_city_name, Toast.LENGTH_LONG).show();
             return;
         }
         ((MainActivity)getActivity()).openFragmentWeatherDisplay(cityName);
@@ -52,9 +49,5 @@ public class FragmentEnterCityName extends Fragment {
 
     public void showLoader(){
         progressBarHolder.setVisibility(View.VISIBLE);
-    }
-
-    public void hideLoader(){
-        progressBarHolder.setVisibility(View.GONE);
     }
 }
