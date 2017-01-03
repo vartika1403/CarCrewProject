@@ -40,6 +40,11 @@ public class FragmentWeatherDisplay extends Fragment {
         }
     }
 
+    private double convertTemp(Double cityTemp) {
+        cityTemp = (cityTemp - 273.15);
+        return cityTemp;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,9 +52,11 @@ public class FragmentWeatherDisplay extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment_weather_display, container, false);
         ButterKnife.bind(this, view);
         textCityName.setText(cityName);
-        String temp = String.valueOf(cityTemp);
-        Log.i(CITY_NAME, "the temp, " + temp);
-        textCityTemp.setText(temp);
+        Log.i(CITY_NAME, "the temp, " + cityTemp);
+        double cityTempCelsius = convertTemp(cityTemp);
+        Log.i(CITY_NAME, "the temp , " + cityTempCelsius);
+        String temp = String.format("%.2f", cityTempCelsius);
+        textCityTemp.setText(temp + (char) 0x00B0 );
         return view;
     }
 }

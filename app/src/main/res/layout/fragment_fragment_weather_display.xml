@@ -3,6 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:alpha="0.8"
+    android:gravity="bottom"
+    android:background="@drawable/weather_background"
     tools:context="com.example.vartikasharma.mynewproject.FragmentWeatherDisplay">
 
     <TextView
@@ -10,18 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal"
-        android:text="Mumbai" />
+        android:gravity="center"
+        android:textSize="60sp"
+        android:textColor="@color/colorWhite"
+        android:layout_gravity="start" />
 
     <TextView
         android:id="@+id/temperature"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:text="32 C"
+        android:layout_gravity="start"
+        android:textSize="60sp"
+        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
