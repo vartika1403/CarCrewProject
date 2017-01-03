@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     private OkHttpClient client;
     private String url;
-    private Double temp;
     private FragmentEnterCityName fragmentEnterCityName;
 
     @BindView(R.id.fragment_container)
@@ -75,9 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     JSONObject mainObject = jsonObj.getJSONObject("main");
-                    temp = mainObject.getDouble("temp");
+                    double temp = mainObject.getDouble("temp");
+                    double pressue = mainObject.getDouble("pressure");
+                    double humidity = mainObject.getDouble("humidity");
 
-                    FragmentWeatherDisplay fragmentWeatherDisplay = FragmentWeatherDisplay.newInstance(cityName, temp);
+                    FragmentWeatherDisplay fragmentWeatherDisplay =
+                            FragmentWeatherDisplay.newInstance(cityName, temp, pressue, humidity);
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.fragment_container, fragmentWeatherDisplay);
                     fragmentTransaction.commit();

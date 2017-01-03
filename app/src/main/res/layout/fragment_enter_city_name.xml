@@ -7,15 +7,15 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0.8"
+    android:gravity="center_horizontal"
     android:background="@drawable/first_fragment_background"
-    android:gravity="center"
     android:orientation="vertical"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/enter_your_city_name"
         android:textColor="@color/colorWhite"
@@ -24,19 +24,21 @@
 
     <EditText
         android:id="@+id/edit_text_city_name"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/buttonColor"
         android:gravity="center"
         android:hint="enter city name"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:textColor="@color/colorWhite" />
 
     <Button
         android:id="@+id/go_button"
         android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/button_background"
         android:text="@string/go"
         android:textColor="@color/colorWhite" />
 
