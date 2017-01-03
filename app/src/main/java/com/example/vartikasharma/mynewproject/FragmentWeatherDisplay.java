@@ -2,7 +2,6 @@ package com.example.vartikasharma.mynewproject;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +13,31 @@ import butterknife.ButterKnife;
 public class FragmentWeatherDisplay extends Fragment {
     private static final String CITY_NAME = FragmentWeatherDisplay.class.getSimpleName() + ".city_name" ;
     private static final String CITY_TEMP = FragmentWeatherDisplay.class.getSimpleName() + ".temp";
+    private static final String CITY_PRESSURE = FragmentWeatherDisplay.class.getSimpleName() + ".pressure";
+    private static final String CITY_HUMIDITY = FragmentWeatherDisplay.class.getSimpleName() + ".humidity";
 
     @BindView(R.id.text_city_name)
     TextView textCityName;
     @BindView(R.id.temperature)
     TextView textCityTemp;
+    @BindView(R.id.pressure)
+    TextView textCityPressure;
+    @BindView(R.id.humidity)
+    TextView textCityHumidity;
 
     private String cityName;
-    private Double cityTemp;
+    private double cityTemp;
+    private double cityPressure;
+    private double cityHumidity;
 
 
-    public static FragmentWeatherDisplay newInstance(String city, Double temp) {
+    public static FragmentWeatherDisplay newInstance(String city, double temp, double pressure, double humidity) {
         FragmentWeatherDisplay fragmentWeatherDisplay = new FragmentWeatherDisplay();
         Bundle args = new Bundle();
         args.putString(CITY_NAME, city);
         args.putDouble(CITY_TEMP, temp);
+        args.putDouble(CITY_PRESSURE, pressure);
+        args.putDouble(CITY_HUMIDITY, humidity);
         fragmentWeatherDisplay.setArguments(args);
         return fragmentWeatherDisplay;
     }
@@ -39,6 +48,8 @@ public class FragmentWeatherDisplay extends Fragment {
         if (getArguments() != null) {
             cityName = getArguments().getString(CITY_NAME);
             cityTemp = getArguments().getDouble(CITY_TEMP);
+            cityPressure = getArguments().getDouble(CITY_PRESSURE);
+            cityHumidity = getArguments().getDouble(CITY_HUMIDITY);
         }
     }
 
@@ -57,6 +68,8 @@ public class FragmentWeatherDisplay extends Fragment {
         double cityTempCelsius = convertTemp(cityTemp);
         String temp = String.format("%.2f", cityTempCelsius);
         textCityTemp.setText(temp + (char) 0x00B0 );
+        textCityPressure.setText(String.valueOf(cityPressure));
+        textCityHumidity.setText(String.valueOf(cityHumidity));
         return view;
     }
 }
