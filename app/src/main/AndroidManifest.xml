@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.vartikasharma.mynewproject">
+    package="com.example.vartikasharma.CarCrew">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/weather_icon"
-        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_1_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".app_1.MainActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:immersive="true"
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
         </activity>
 
+        <!--
+          app 2
+         -->
+        <activity android:name=".app_2.MainActivity"
+            android:label="@string/app_2_name"
+            android:icon="@mipmap/ic_launcher"
+            android:immersive="true"
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+        </activity>
     </application>
 
 </manifest>
