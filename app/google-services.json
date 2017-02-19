@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "962024060379",
+    "firebase_url": "https://carcrew-project.firebaseio.com",
+    "project_id": "carcrew-project",
+    "storage_bucket": "carcrew-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962024060379:android:b320575afa2cde31",
+        "android_client_info": {
+          "package_name": "com.example.vartikasharma.carcrew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "962024060379-rucdflppt4jeq01n0kpee584qg9285au.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpz1LP54YyWYHjDDrlGmg9O-XC-ral7fY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
