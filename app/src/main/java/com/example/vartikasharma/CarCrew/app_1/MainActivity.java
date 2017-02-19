@@ -1,9 +1,9 @@
-package com.example.vartikasharma.CarCrew.app_1;
+package com.example.vartikasharma.carcrew.app_1;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.vartikasharma.CarCrew.R;
+import com.example.vartikasharma.carcrew.R;
 
 public class MainActivity extends AppCompatActivity {
 
