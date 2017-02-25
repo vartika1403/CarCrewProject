@@ -15,9 +15,12 @@ import android.widget.TextView;
 import com.example.vartikasharma.carcrew.Conf;
 import com.example.vartikasharma.carcrew.DataObject;
 import com.example.vartikasharma.carcrew.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +117,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         });
     }
 
-    private void updateDataValueForEnquiries(final Double min, final String brandname, DataObject openListObject) {
+    private void updateDataValueForEnquiries(final Double min, final String brandname, final DataObject openListObject) {
         String firebaseDataUri = Conf.firebaseUserDataURI();
         Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().
@@ -129,9 +132,29 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                 openListObject.setBrand_Name(brandname);
             }
         Log.i(LOG_TAG, "enquiry id , " + openListObject.getEnquiry_Item_ID());
-        Query queryRef =  dataRef.orderByChild("enquiry_item_id").equalTo(openListObject.getEnquiry_Item_ID());
+        final Query queryRef =  dataRef.orderByChild("enquiry_item_id").equalTo(openListObject.getEnquiry_Item_ID());
             Log.i(LOG_TAG, "queryRef, " + queryRef.getRef());
-            queryRef.getRef().setValue(objectList);
+            queryRef.getRef().addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()){
+                        DataObject data = ds.getValue(DataObject.class);
+                        int enquiryItemId = data.getEnquiry_Item_ID();
+                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
+                        String key = ds.getKey();
+                        Log.i(LOG_TAG, "key, " + key);
+                        if (enquiryItemId == openListObject.getEnquiry_Item_ID()){
+                            Log.i(LOG_TAG, "query key, " +  queryRef.getRef().child(key));
+                            queryRef.getRef().child(key).setValue(openListObject);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
 
