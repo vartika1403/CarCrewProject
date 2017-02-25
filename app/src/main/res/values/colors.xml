@@ -8,4 +8,5 @@
     <color name="photoBackground">#bbbfc4</color>
     <color name="itemTopBackground">#d8d8d8</color>
     <color name="textColor">#37393e</color>
+    <color name="textBrandNameColor">#6c717a</color>
 </resources>

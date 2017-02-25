@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/top_layer_item"
+        android:id="@+id/top_layer_open_item"
         android:layout_width="match_parent"
         android:background="@color/itemTopBackground"
         android:layout_height="64dp">
 
         <TextView
-            android:id="@+id/enquiry_id"
+            android:id="@+id/open_enquiry_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -24,7 +24,7 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/garage_name"
+            android:id="@+id/open_garage_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -36,111 +36,124 @@
             android:textColor="@color/textColor"
             android:text="Garage Name"
             android:textSize="24sp" />
-    </RelativeLayout>
-    
+
+</RelativeLayout>
     <RelativeLayout
-        android:id="@+id/item_details"
-        android:layout_below="@id/top_layer_item"
+        android:id="@+id/open_item_details"
+        android:layout_below="@id/top_layer_open_item"
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/item_pic"
+            android:id="@+id/open_item_pic"
             android:layout_width="100.9dp"
-            android:layout_height="121.9dp"
+            android:layout_height="151.9dp"
             android:background="@drawable/image_background"/>
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_part_name"
+            android:id="@+id/part_name"
             android:textColor="@color/textColor"
             android:layout_marginTop="10dp"
             android:text="Part Name:"
             android:textSize="16sp"
-            android:layout_toRightOf="@id/item_pic"
-            android:layout_toEndOf="@id/item_pic"
+            android:layout_toRightOf="@id/open_item_pic"
+            android:layout_toEndOf="@id/open_item_pic"
             android:layout_marginLeft="22dp"
             android:layout_marginStart="22dp"/>
 
-        <TextView
-            android:id="@+id/text_brand_name"
-            android:text="Brand Name:"
-            android:textColor="@color/textBrandNameColor"
-            android:layout_marginTop="5dp"
-            android:textSize="14sp"
-            android:layout_below="@id/text_part_name"
-            android:layout_toRightOf="@id/item_pic"
-            android:layout_toEndOf="@id/item_pic"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/text_car_name"
+            android:id="@+id/car_name"
             android:text="For: Car Name:"
             android:textColor="@color/textBrandNameColor"
             android:layout_marginTop="5dp"
             android:textSize="14sp"
-            android:layout_below="@id/text_brand_name"
-            android:layout_toRightOf="@id/item_pic"
-            android:layout_toEndOf="@id/item_pic"
+            android:layout_below="@id/part_name"
+            android:layout_toRightOf="@id/open_item_pic"
+            android:layout_toEndOf="@id/open_item_pic"
             android:layout_marginLeft="22dp"
             android:layout_marginStart="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/text_in_stock"
+            android:id="@+id/in_stock"
             android:text="In Stock"
             android:textColor="@color/textBrandNameColor"
             android:layout_marginTop="5dp"
             android:textSize="14sp"
-            android:layout_below="@id/text_car_name"
-            android:layout_toRightOf="@id/item_pic"
-            android:layout_toEndOf="@id/item_pic"
+            android:layout_below="@id/car_name"
+            android:layout_toRightOf="@id/open_item_pic"
+            android:layout_toEndOf="@id/open_item_pic"
             android:layout_marginLeft="22dp"
             android:layout_marginStart="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/value"
-            android:layout_below="@id/text_in_stock"
-            android:layout_toRightOf="@id/item_pic"
-            android:layout_toEndOf="@id/item_pic"
-            android:text="100"
-            android:layout_marginTop="10dp"
+        <EditText
+            android:id="@+id/brand_name_text"
+            android:layout_below="@id/in_stock"
+            android:layout_toRightOf="@id/open_item_pic"
+            android:layout_toEndOf="@id/open_item_pic"
+            android:hint="Brand Name"
+            android:inputType="text"
+            android:textColorHint="@color/textBrandNameColor"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:background="@color/itemTopBackground"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="22dp"
             android:layout_marginStart="22dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="130dp"
+            android:layout_height="50dp" />
 
         <Button
-            android:id="@+id/oem_buttom"
+            android:id="@+id/text_oem_status_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="10dp"
             android:text="OEM"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rectangle_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="80dp"
+            android:layout_height="40dp" />
 
         <Button
-            android:id="@+id/open_button"
+            android:id="@+id/text_open_status_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="11dp"
             android:text="OEM"
-            android:layout_below="@id/oem_buttom"
+            android:layout_below="@id/text_oem_status_button"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rectangle_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="80dp"
+            android:layout_height="40dp" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="11dp"
+            android:text="SUBMIT"
+            android:layout_below="@id/text_open_status_button"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/rectangle_8"
+            android:layout_width="100dp"
+            android:layout_height="43dp" />
+        
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="17dp"
+            android:id="@+id/vendor_details"
+            android:layout_below="@id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
 
     </RelativeLayout>
-
-</RelativeLayout>
+    </RelativeLayout>

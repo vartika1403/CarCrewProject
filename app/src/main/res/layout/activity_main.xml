@@ -5,9 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <ListView
+        android:id="@+id/enquiry_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="CONFIRM ORDER"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:id="@+id/confirm_order"
+        android:background="@drawable/button_bg"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
