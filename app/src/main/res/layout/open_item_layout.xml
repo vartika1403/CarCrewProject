@@ -4,6 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -43,6 +45,8 @@
         android:id="@+id/open_item_details"
         android:layout_below="@id/top_layer_open_item"
         android:layout_marginTop="2dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -154,8 +158,8 @@
             android:layout_below="@id/text_open_status_button"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rectangle_8"
-            android:layout_width="85dp"
-            android:layout_height="30dp" />
+            android:layout_width="95dp"
+            android:layout_height="35dp" />
         
         <LinearLayout
             android:orientation="vertical"

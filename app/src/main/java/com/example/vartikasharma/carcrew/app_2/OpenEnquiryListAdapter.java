@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vartikasharma.carcrew.Conf;
 import com.example.vartikasharma.carcrew.DataObject;
@@ -27,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryListAdapter.MyViewHolder>{
+public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryListAdapter.MyViewHolder> {
     private static final String LOG_TAG = OpenEnquiryListAdapter.class.getSimpleName();
     private Context context;
     private LayoutInflater inflater;
@@ -37,6 +38,183 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         this.context = context;
         this.objectList = objectList;
         inflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = inflater.inflate(R.layout.open_item_layout, parent, false);
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        final DataObject dataObject = objectList.get(position);
+        holder.openEnquiryId.setText("Enquiry Id: " + dataObject.getEnquiry_Item_ID());
+        holder.openGarageName.setText("Garage Name: " + dataObject.getGarage_Name());
+        holder.partName.setText(dataObject.getPart_Name());
+        holder.carName.setText(dataObject.getCar_Name());
+        holder.inStock.setText(" " + dataObject.getQuantity_In_Stock());
+        if (dataObject.getPart_Flag() == 2) {
+            holder.textOesStatus.setText("OES");
+        } else {
+            holder.textOesStatus.setText("OEM");
+        }
+        if (dataObject.getEnquiry_Item_Status() == 0 || dataObject.getEnquiry_Item_Status() == 3) {
+            holder.textOpenStatus.setText("OPEN");
+        } else {
+            holder.textOpenStatus.setText("CLOSE");
+        }
+
+        holder.textBrandName.getBackground().setColorFilter(Color.parseColor("#979797"), PorterDuff.Mode.SRC_IN);
+        holder.vendorDetails.invalidate();
+        holder.vendorDetails.removeAllViews();
+        final List<EditText> mrpValue = new ArrayList<>();
+        mrpValue.clear();
+        Log.i(LOG_TAG, "mrp value, " + mrpValue.size());
+        for (int i = 0; i < 3; i++) {
+            loadVendorList(holder.vendorDetails, mrpValue);
+        }
+
+        holder.submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String brandname = holder.textBrandName.getText().toString();
+                Log.i(LOG_TAG, "brand name" + brandname);
+                Log.i(LOG_TAG, "mrp value size, " + mrpValue.size());
+                String mrpValueText = mrpValue.get(0).getText().toString();
+                Double minMrpValue = 0.0;
+                if (!mrpValueText.isEmpty()) {
+                    minMrpValue = Double.parseDouble(mrpValueText);
+                }
+                for (int i = 1; i < mrpValue.size(); i++) {
+                    String valueText = mrpValue.get(i).getText().toString();
+                    Double value = 0.0;
+                    if (!valueText.isEmpty()) {
+                        value = Double.parseDouble(valueText);
+                    }
+                    Log.i(LOG_TAG, "value , " + value);
+                    if (minMrpValue != 0.0 && value != 0.0 && minMrpValue > value) {
+                        minMrpValue = value;
+                        Log.i(LOG_TAG, "minMrpValue , " + minMrpValue);
+                    } else if (minMrpValue == 0.0 && value != 0.0) {
+                        minMrpValue = value;
+                    }
+                }
+                //this call will update the existing data list with new data
+                updateDataValueForEnquiries(minMrpValue, brandname, dataObject,
+                        holder.textOpenStatus, holder.submitButton);
+                //this call will remove closed items from open list
+                removeDataFromOpenList(dataObject);
+            }
+        });
+    }
+
+    private void removeDataFromOpenList(final DataObject dataObject) {
+        String firebaseOpenDataURi = Conf.firebaseUserOpenQueries();
+        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseOpenDataURi);
+        final DatabaseReference databaseRef = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl(firebaseOpenDataURi);
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        DataObject data = ds.getValue(DataObject.class);
+                        int enquiryItemId = data.getEnquiry_Item_ID();
+                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
+                        String key = ds.getKey();
+                        Log.i(LOG_TAG, "key, " + key);
+                        if (enquiryItemId == dataObject.getEnquiry_Item_ID()) {
+                            Log.i(LOG_TAG, "query open key, " + databaseRef.child(key));
+                            databaseRef.child(key).removeValue();
+                        }
+                    }
+                } else {
+                    Log.e(LOG_TAG, "error in getting data");
+                    Toast.makeText(context,
+                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateDataValueForEnquiries(final Double min, final String brandname,
+                                             final DataObject openListObject, final Button openButton, final Button submitButton) {
+        String firebaseDataUri = Conf.firebaseUserDataURI();
+        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
+        final DatabaseReference dataRef = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl(firebaseDataUri);
+        // check atleast one mrp value is present or not
+        //  check brand name is present or not
+        if (min != 0.0 && !brandname.isEmpty()) {
+            Log.i(LOG_TAG, "brand value, " + brandname);
+            openListObject.setBrand_Name(brandname);
+            submitButton.setText("SUBMIT SUCCESSFULLY");
+            openListObject.setEnquiry_Item_Status(1);
+            openButton.setText("CLOSE");
+            submitButton.setEnabled(false);
+        } else {
+            Log.e(LOG_TAG, "please fill the values");
+            Toast.makeText(context, "Please fill values", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Log.i(LOG_TAG, "enquiry id , " + openListObject.getEnquiry_Item_ID());
+        final Query queryRef = dataRef.orderByChild("enquiry_item_id").equalTo(openListObject.getEnquiry_Item_ID());
+        Log.i(LOG_TAG, "queryRef, " + queryRef.getRef());
+        queryRef.getRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        DataObject data = ds.getValue(DataObject.class);
+                        int enquiryItemId = data.getEnquiry_Item_ID();
+                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
+                        String key = ds.getKey();
+                        Log.i(LOG_TAG, "key, " + key);
+                        if (enquiryItemId == openListObject.getEnquiry_Item_ID()) {
+                            Log.i(LOG_TAG, "query key, " + queryRef.getRef().child(key));
+                            queryRef.getRef().child(key).setValue(openListObject);
+                            //  Toast.makeText(context, "Saved Successfully", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                } else {
+                    Log.e(LOG_TAG, "error in getting data");
+                    Toast.makeText(context,
+                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadVendorList(LinearLayout vendorDetails, final List<EditText> mrpValue) {
+        View view = LayoutInflater.from(context).inflate(R.layout.vendor_detail_layout, vendorDetails, false);
+        EditText vendor_name = (EditText) view.findViewById(R.id.vendor_name);
+        final EditText mrp_value = (EditText) view.findViewById(R.id.mrp_value);
+        EditText cp_value = (EditText) view.findViewById(R.id.cp_value);
+        EditText sp_value = (EditText) view.findViewById(R.id.sp_value);
+        mrpValue.add(mrp_value);
+        vendorDetails.addView(view);
+    }
+
+    @Override
+    public int getItemCount() {
+        return objectList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -64,116 +242,5 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
             vendorDetails = (LinearLayout) view.findViewById(R.id.vendor_details);
             submitButton = (Button) view.findViewById(R.id.submit_button);
         }
-    }
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.open_item_layout, parent, false);
-
-        return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final DataObject dataObject = objectList.get(position);
-        holder.openEnquiryId.setText("Enquiry Id: " + dataObject.getEnquiry_Item_ID());
-        holder.openGarageName.setText("Garage Name: " + dataObject.getGarage_Name());
-        holder.partName.setText(dataObject.getPart_Name());
-        holder.carName.setText(dataObject.getCar_Name());
-        holder.inStock.setText(" " + dataObject.getQuantity_In_Stock());
-        holder.textOesStatus.setText(" " + dataObject.getPart_Flag());
-        if (dataObject.getEnquiry_Item_Status() == 0 || dataObject.getEnquiry_Item_Status() == 3) {
-            holder.textOpenStatus.setText("OPEN");
-        } else {
-            holder.textOpenStatus.setText("CLOSE");
-        }
-
-        holder.textBrandName.getBackground().setColorFilter(Color.parseColor("#979797"), PorterDuff.Mode.SRC_IN);
-        holder.vendorDetails.invalidate();
-        holder.vendorDetails.removeAllViews();
-        final List<EditText> mrpValue = new ArrayList<>();
-        mrpValue.clear();
-        Log.i(LOG_TAG, "mrp value, " + mrpValue.size());
-        for (int i =0 ; i < 3; i++) {
-            loadVendorList(holder.vendorDetails, mrpValue);
-        }
-
-        holder.submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String brandname = holder.textBrandName.getText().toString();
-                Log.i(LOG_TAG, "brand name" + brandname);
-                Log.i(LOG_TAG, "mrp value size, " + mrpValue.size());
-                Double minMrpValue = Double.parseDouble(mrpValue.get(0).getText().toString());
-                if (!mrpValue.isEmpty()) {
-                    for (int i = 1; i< mrpValue.size(); i++) {
-                        Double value = Double.parseDouble(mrpValue.get(i).getText().toString());
-                        Log.i(LOG_TAG, "value , " + value);
-                        if (minMrpValue > value) {
-                            minMrpValue = value;
-                            Log.i(LOG_TAG, "minMrpValue , " + minMrpValue);
-                        }
-                    }
-                    updateDataValueForEnquiries(minMrpValue, brandname, dataObject);
-                }
-            }
-        });
-    }
-
-    private void updateDataValueForEnquiries(final Double min, final String brandname, final DataObject openListObject) {
-        String firebaseDataUri = Conf.firebaseUserDataURI();
-        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
-        final DatabaseReference dataRef = FirebaseDatabase.getInstance().
-                getReferenceFromUrl(firebaseDataUri);
-
-            if (min != 0.0) {
-                Log.i(LOG_TAG, "min value, " + min);
-                openListObject.setPart_MRP(min);
-            }
-            if (!brandname.isEmpty()) {
-                Log.i(LOG_TAG, "brand value, " + brandname);
-                openListObject.setBrand_Name(brandname);
-            }
-        Log.i(LOG_TAG, "enquiry id , " + openListObject.getEnquiry_Item_ID());
-        final Query queryRef =  dataRef.orderByChild("enquiry_item_id").equalTo(openListObject.getEnquiry_Item_ID());
-            Log.i(LOG_TAG, "queryRef, " + queryRef.getRef());
-            queryRef.getRef().addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()){
-                        DataObject data = ds.getValue(DataObject.class);
-                        int enquiryItemId = data.getEnquiry_Item_ID();
-                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
-                        String key = ds.getKey();
-                        Log.i(LOG_TAG, "key, " + key);
-                        if (enquiryItemId == openListObject.getEnquiry_Item_ID()){
-                            Log.i(LOG_TAG, "query key, " +  queryRef.getRef().child(key));
-                            queryRef.getRef().child(key).setValue(openListObject);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-
-    private void loadVendorList(LinearLayout vendorDetails, final List<EditText> mrpValue) {
-        View view = LayoutInflater.from(context).inflate(R.layout.vendor_detail_layout, vendorDetails, false);
-        EditText vendor_name = (EditText)view.findViewById(R.id.vendor_name);
-        final EditText mrp_value = (EditText) view.findViewById(R.id.mrp_value);
-        EditText cp_value = (EditText) view.findViewById(R.id.cp_value);
-        EditText sp_value = (EditText) view.findViewById(R.id.sp_value);
-        mrpValue.add(mrp_value);
-        vendorDetails.addView(view);
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return objectList.size();
     }
 }

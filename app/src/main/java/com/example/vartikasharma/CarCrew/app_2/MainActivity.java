@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 
 import com.example.vartikasharma.carcrew.Conf;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().
                 getReferenceFromUrl(firebaseOpenDataUri);
 
+        openEnquiryItemList.clear();
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

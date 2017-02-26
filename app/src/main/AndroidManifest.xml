@@ -27,6 +27,7 @@
             android:label="@string/app_2_name"
             android:icon="@mipmap/ic_launcher"
             android:immersive="true"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
        <intent-filter>
             <action android:name="com.example.vartikasharma.carcrew.app_2.intent.action.Launch"/>

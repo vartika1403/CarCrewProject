@@ -3,10 +3,10 @@ package com.example.vartikasharma.carcrew.app_1;
 
 import android.content.Context;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,7 +15,7 @@ import com.example.vartikasharma.carcrew.R;
 
 import java.util.List;
 
-public class EnquiryListAdapter extends BaseAdapter {
+public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.ViewHolder> {
     private Context context;
     private LayoutInflater inflater;
     private List<DataObject> objects;
@@ -27,61 +27,40 @@ public class EnquiryListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return objects.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = inflater.inflate(R.layout.item_layout, parent, false);
+
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public Object getItem(int i) {
-        return objects.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View convertView, ViewGroup viewGroup) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_layout, null, false);
-            holder = new ViewHolder();
-
-            holder.partName = (TextView) convertView.findViewById(R.id.text_part_name);
-            holder.brandName = (TextView) convertView.findViewById(R.id.text_brand_name);
-            holder.carName = (TextView) convertView.findViewById(R.id.text_car_name);
-            holder.price = (TextView) convertView.findViewById(R.id.value);
-            holder.inStock = (TextView) convertView.findViewById(R.id.text_in_stock);
-            holder.oemStatus = (Button) convertView.findViewById(R.id.oem_buttom);
-            holder.openStatus = (Button) convertView.findViewById(R.id.open_button);
-            holder.enquiryId = (TextView) convertView.findViewById(R.id.enquiry_id);
-            holder.garageName = (TextView) convertView.findViewById(R.id.garage_name);
-
-            convertView.setTag(holder);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final DataObject dataObject = objects.get(position);
+        holder.partName.setText(dataObject.getPart_Name());
+        holder.brandName.setText(dataObject.getBrand_Name());
+        holder.carName.setText(dataObject.getCar_Name());
+        holder.price.setText(" " + dataObject.getPart_MRP());
+        holder.inStock.setText(" " + dataObject.getQuantity_In_Stock());
+        if (dataObject.getPart_Flag() == 2) {
+            holder.oemStatus.setText("OES");
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder. oemStatus.setText("OEM");
         }
-        holder.partName.setText(objects.get(i).getPart_Name());
-        holder.brandName.setText(objects.get(i).getBrand_Name());
-        holder.carName.setText(objects.get(i).getCar_Name());
-        holder.price.setText(" " + objects.get(i).getFinal_Price());
-        holder.inStock.setText(" " + objects.get(i).getQuantity_In_Stock());
-        holder.oemStatus.setText(" " + objects.get(i).getPart_Flag());
-        if (objects.get(i).getEnquiry_Item_Status() == 0 || objects.get(i).getEnquiry_Item_Status() == 3) {
+        if (dataObject.getEnquiry_Item_Status() == 0 || dataObject.getEnquiry_Item_Status() == 3) {
             holder.openStatus.setText("OPEN");
         } else {
             holder.openStatus.setText("CLOSE");
         }
-       // holder.openStatus.setText(" " + objects.get(i).getEnquiry_Item_Status());
-        holder.enquiryId.setText("Enquiry ID: " + objects.get(i).getEnquiry_Item_ID());
-        holder.garageName.setText("Garage Name: " + objects.get(i).getGarage_Name());
-
-        return convertView;
+        holder.enquiryId.setText("Enquiry ID: " + dataObject.getEnquiry_Item_ID());
+        holder.garageName.setText("Garage Name: " + dataObject.getGarage_Name());
     }
 
-    private class ViewHolder {
+    @Override
+    public int getItemCount() {
+        return objects.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView enquiryId;
         TextView garageName;
         TextView partName;
@@ -91,6 +70,21 @@ public class EnquiryListAdapter extends BaseAdapter {
         TextView inStock;
         Button oemStatus;
         Button openStatus;
+
+        public ViewHolder(View view) {
+            super(view);
+
+            partName = (TextView) view.findViewById(R.id.text_part_name);
+            brandName = (TextView) view.findViewById(R.id.text_brand_name);
+            carName = (TextView) view.findViewById(R.id.text_car_name);
+            price = (TextView) view.findViewById(R.id.value);
+            inStock = (TextView) view.findViewById(R.id.text_in_stock);
+            oemStatus = (Button) view.findViewById(R.id.oem_buttom);
+            openStatus = (Button) view.findViewById(R.id.open_button);
+            enquiryId = (TextView) view.findViewById(R.id.enquiry_id);
+            garageName = (TextView) view.findViewById(R.id.garage_name);
+
+        }
     }
 }
 

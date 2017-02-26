@@ -5,14 +5,13 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.vartikasharma.carcrew.Conf;
@@ -44,20 +43,20 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final String SERVER_HOST = "https://carcrew-project.firebaseio.com/";
     private static final String URL = "https://firebasestorage.googleapis.com/v0/b/carcrew-project.appspot.com/o/download.json?alt=media&token=8666cc50-ec7e-4319-9208-c936d5e66fe5";
-    private List<DataObject> dataObject = new ArrayList<>();
-    private List<DataObject> listItem = new ArrayList<>();
-    private List<DataObject> openListItem = new ArrayList<>();
-    private EnquiryListAdapter enquiryListAdapter;
-
-
     @BindView(R.id.enquiry_list)
-    public ListView enquiryList;
+    public RecyclerView enquiryList;
     @BindView(R.id.confirm_order)
     Button confirmOrder;
     @BindView(R.id.toolbar)
     Toolbar toolbarApp1;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    private List<DataObject> dataObject = new ArrayList<>();
+    private List<DataObject> listItem = new ArrayList<>();
+    private List<DataObject> openListItem = new ArrayList<>();
+    private EnquiryListAdapter enquiryListAdapter;
+    private boolean isOpenListItemPresent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,72 +67,105 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbarApp1);
 
-        initToolBar();
-
-        if (dataObject == null) {
+        isOpenListItemPresent = false;
+        if (listItem == null) {
             Log.i(LOG_TAG, "firebase data, " + FirebaseDatabase.getInstance().getReference().child("data"));
             try {
                 fetchData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             fetchDataFromFirebase();
         }
     }
 
-    private void initToolBar() {
-
-    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick(R.id.confirm_order)
     void confirmOrder() {
-        saveDataEnteredToFirebase();
-        Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
-        startActivity(intent);
+        // save data for the first time only
+        Log.i(LOG_TAG, " item data value, " + FirebaseDatabase.getInstance().getReference().child("open"));
+        FirebaseDatabase.getInstance().getReference().child("open").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    Log.i(LOG_TAG, " item data value ok , " + FirebaseDatabase.getInstance().getReference().child("open"));
+                    saveDataEnteredToFirebase();
+                } else {
+                    Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
+                    startActivity(intent);
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void saveDataEnteredToFirebase() {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("open");
-        for (int i =0; i < openListItem.size(); i++) {
+        Log.i(LOG_TAG, "open list item count, " + openListItem.size());
+        isOpenListItemPresent = true;
+        for (int i = 0; i < openListItem.size(); i++) {
             DatabaseReference reference = usersRef.push();
             Log.i(LOG_TAG, "refernce, " + reference);
             reference.setValue(openListItem.get(i));
         }
+        Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
+        startActivity(intent);
     }
 
     private void fetchDataFromFirebase() {
-     String firebaseDataUri = Conf.firebaseUserDataURI();
+        String firebaseDataUri = Conf.firebaseUserDataURI();
         Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().
                 getReferenceFromUrl(firebaseDataUri);
         Log.i(LOG_TAG, "dataRef, " + dataRef);
 
+        openListItem.clear();
+        listItem.clear();
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long dataCount = dataSnapshot.getChildrenCount();
-                Log.i(LOG_TAG, "dataCount, " + dataCount);
+                if (dataSnapshot.exists()) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    long dataCount = dataSnapshot.getChildrenCount();
+                    Log.i(LOG_TAG, "dataCount, " + dataCount);
 
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    Log.i(LOG_TAG, "data value, " + data.getValue());
-                    Log.i(LOG_TAG, "data value, " + data.getKey());
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        Log.i(LOG_TAG, "data value, " + data.getValue());
+                        Log.i(LOG_TAG, "data value, " + data.getKey());
 
-                    DataObject item = data.getValue(DataObject.class);
-                    if (item != null) {
-                        listItem.add(item);
+                        DataObject item = data.getValue(DataObject.class);
+                        if (item != null) {
+                            listItem.add(item);
+                        }
+                        if (item != null && !isOpenListItemPresent) {
+                            Log.i(LOG_TAG, " item data value, " + isOpenListItemPresent);
+                            if (item.getCar_Name() == null || item.getBrand_Name() == null ||
+                                    item.getFinal_Price() == 0.0 || item.getPart_Name().isEmpty()
+                                    || item.getQuantity_In_Stock() == 0) {
+                                Log.i(LOG_TAG, "open item, " + item.getEnquiry_Item_ID());
+                                openListItem.add(item);
+                            }
+                        }
                     }
-                }
 
-                enquiryListAdapter = new EnquiryListAdapter(MainActivity.this, listItem);
-                enquiryList.setAdapter(enquiryListAdapter);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                    enquiryList.setLayoutManager(layoutManager);
+                    enquiryListAdapter = new EnquiryListAdapter(MainActivity.this, listItem);
+                    enquiryList.setAdapter(enquiryListAdapter);
+                } else {
+                    Log.e(LOG_TAG, "error in getting data");
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getApplicationContext(),
+                            "Sorry could' nt get the data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
 
             @Override
@@ -170,15 +202,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                     try {
                         assert json != null;
-                        jsonArray  = json.getJSONArray("data");
+                        jsonArray = json.getJSONArray("data");
                         Log.i(LOG_TAG, "jsonArray," + jsonArray);
                         Log.i(LOG_TAG, "length, " + jsonArray.length());
-                        for (int i = 0 ; i < jsonArray.length(); i++) {
-                            dataObject = Arrays.asList(gson.fromJson(jsonArray.toString(), DataObject[].class));
-                            Log.i(LOG_TAG, "dataobject, " + dataObject);
-                            Log.i(LOG_TAG, "first dataObject, " + dataObject.get(i).getCar_Name());
-                            if (dataObject.get(i).getCar_Name() == null || dataObject.get(i).getBrand_Name() == null || dataObject.get(i).getFinal_Price() == 0.0 || dataObject.get(i).getPart_Name().isEmpty() || dataObject.get(i).getQuantity_In_Stock() == 0){
-                                openListItem.add(dataObject.get(i));
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            listItem = Arrays.asList(gson.fromJson(jsonArray.toString(), DataObject[].class));
+                            Log.i(LOG_TAG, "dataobject, " + listItem);
+                            Log.i(LOG_TAG, "first dataObject, " + listItem.get(i).getCar_Name());
+                            if (listItem.get(i).getCar_Name() == null || listItem.get(i).getBrand_Name() == null ||
+                                    listItem.get(i).getFinal_Price() == 0.0 || listItem.get(i).getPart_Name().isEmpty() ||
+                                    listItem.get(i).getQuantity_In_Stock() == 0) {
+                                openListItem.add(listItem.get(i));
                             }
                         }
 
@@ -200,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("data");
-        for (int i =0; i < dataObject.size(); i++) {
+        for (int i = 0; i < dataObject.size(); i++) {
             DatabaseReference reference = usersRef.push();
             Log.i(LOG_TAG, "refernce, " + reference);
             reference.setValue(dataObject.get(i));
