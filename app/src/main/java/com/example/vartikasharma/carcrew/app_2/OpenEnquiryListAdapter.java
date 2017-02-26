@@ -2,6 +2,8 @@ package com.example.vartikasharma.carcrew.app_2;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,6 +87,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
             holder.textOpenStatus.setText("CLOSE");
         }
 
+        holder.textBrandName.getBackground().setColorFilter(Color.parseColor("#979797"), PorterDuff.Mode.SRC_IN);
         holder.vendorDetails.invalidate();
         holder.vendorDetails.removeAllViews();
         final List<EditText> mrpValue = new ArrayList<>();

@@ -1,74 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:background="@color/itemTopBackground"
-    android:layout_height="wrap_content">
-
-<EditText
-    android:id="@+id/vendor_name"
-    android:hint="Vendor Name"
-    android:inputType="text"
-    android:layout_marginTop="5dp"
-    android:layout_marginLeft="22dp"
-    android:layout_marginStart="22dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/mrp_rupee_pic"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/indian_rupee_symbol"
-        android:layout_width="18dp"
-        android:layout_height="24dp" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_margin="5dp"
+    android:background="@color/itemTopBackground">
 
     <EditText
-        android:id="@+id/mrp_value"
-        android:hint="MRP"
-        android:inputType="number"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
+        android:id="@+id/vendor_name"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/cp_rupee_pic"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/indian_rupee_symbol"
-        android:layout_width="18dp"
-        android:layout_height="24dp" />
-
-    <EditText
-        android:id="@+id/cp_value"
-        android:hint="CP"
-        android:inputType="number"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/sp_rupee_pic"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/indian_rupee_symbol"
-        android:layout_width="18dp"
-        android:layout_height="24dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:hint="Vendor Name"
+        android:inputType="text"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/sp_value"
-        android:hint="SP"
-        android:inputType="number"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="SP"
+        android:layout_centerVertical="true"
+        android:textSize="12sp"
+        android:inputType="number" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/sp_rupee_pic"
+        android:layout_width="7dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_height="10.28dp"
+        android:layout_toLeftOf="@id/sp_value"
+        android:layout_toStartOf="@id/sp_value"
+        android:background="@drawable/indian_rupee_symbol" />
+
+    <EditText
+        android:id="@+id/cp_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toLeftOf="@id/sp_rupee_pic"
+        android:layout_toStartOf="@id/sp_rupee_pic"
+        android:hint="CP"
+        android:layout_centerVertical="true"
+        android:textSize="12sp"
+        android:inputType="number" />
+
+
+    <ImageView
+        android:id="@+id/cp_rupee_pic"
+        android:layout_toLeftOf="@id/cp_value"
+        android:layout_toStartOf="@id/cp_value"
+        android:layout_width="7dp"
+        android:layout_centerVertical="true"
+        android:layout_height="10.28dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/indian_rupee_symbol" />
+
+    <EditText
+        android:id="@+id/mrp_value"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toLeftOf="@id/cp_rupee_pic"
+        android:layout_toStartOf="@id/cp_rupee_pic"
+        android:hint="MRP"
+        android:textSize="12sp"
+        android:inputType="number" />
+
+    <ImageView
+        android:id="@+id/mrp_rupee_pic"
+        android:layout_width="7dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/mrp_value"
+        android:layout_toStartOf="@id/mrp_value"
+        android:layout_height="10.28dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/indian_rupee_symbol" />
+
+
+
+
+</RelativeLayout>

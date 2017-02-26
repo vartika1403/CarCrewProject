@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/top_layer_open_item"
         android:layout_width="match_parent"
         android:background="@color/itemTopBackground"
-        android:layout_height="64dp">
+        android:layout_height="34dp">
 
         <TextView
             android:id="@+id/open_enquiry_id"
@@ -15,13 +18,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="19.2dp"
-            android:layout_marginLeft="32.1dp"
-            android:layout_marginStart="32.1dp"
-            android:layout_marginTop="16.8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:textColor="@color/textColor"
             android:text="Enquiry "
-            android:textSize="24sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/open_garage_name"
@@ -29,40 +31,41 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="19.2dp"
-            android:layout_marginEnd="26.1dp"
-            android:layout_marginRight="26.1dp"
-            android:layout_marginTop="16.8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@color/textColor"
             android:text="Garage Name"
-            android:textSize="24sp" />
+            android:textSize="12sp" />
 
 </RelativeLayout>
     <RelativeLayout
         android:id="@+id/open_item_details"
         android:layout_below="@id/top_layer_open_item"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/open_item_pic"
-            android:layout_width="100.9dp"
-            android:layout_height="151.9dp"
+            android:layout_width="110dp"
+            android:layout_height="110.8dp"
             android:background="@drawable/image_background"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/part_name"
-            android:textColor="@color/textColor"
-            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:lines="2"
+            android:maxWidth="120dp"
             android:text="Part Name:"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
 
 
         <TextView
@@ -70,12 +73,14 @@
             android:text="For: Car Name:"
             android:textColor="@color/textBrandNameColor"
             android:layout_marginTop="5dp"
-            android:textSize="14sp"
+            android:textSize="12sp"
+            android:lines="1"
+            android:maxWidth="120dp"
             android:layout_below="@id/part_name"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -83,67 +88,74 @@
             android:id="@+id/in_stock"
             android:text="In Stock"
             android:textColor="@color/textBrandNameColor"
-            android:layout_marginTop="5dp"
-            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
             android:layout_below="@id/car_name"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/brand_name_text"
+        <FrameLayout
             android:layout_below="@id/in_stock"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/itemTopBackground"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
+            android:layout_width="100dp"
+            android:layout_height="35dp">
+        <EditText
+            android:id="@+id/brand_name_text"
             android:hint="Brand Name"
             android:inputType="text"
-            android:textColorHint="@color/textBrandNameColor"
-            android:paddingLeft="10dp"
-            android:paddingStart="10dp"
-            android:background="@color/itemTopBackground"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"
-            android:layout_width="130dp"
-            android:layout_height="50dp" />
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </FrameLayout>
 
         <Button
             android:id="@+id/text_oem_status_button"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="OEM"
+            android:textSize="12sp"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rectangle_8"
-            android:layout_width="80dp"
-            android:layout_height="40dp" />
+            android:background="@drawable/rectangle_8" />
 
         <Button
             android:id="@+id/text_open_status_button"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="11dp"
             android:text="OEM"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
             android:layout_below="@id/text_oem_status_button"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rectangle_8"
-            android:layout_width="80dp"
-            android:layout_height="40dp" />
+            android:background="@drawable/rectangle_8" />
 
         <Button
             android:id="@+id/submit_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="35dp"
             android:text="SUBMIT"
+            android:textSize="12sp"
             android:layout_below="@id/text_open_status_button"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rectangle_8"
-            android:layout_width="100dp"
-            android:layout_height="43dp" />
+            android:layout_width="85dp"
+            android:layout_height="30dp" />
         
         <LinearLayout
             android:orientation="vertical"
