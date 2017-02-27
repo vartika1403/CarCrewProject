@@ -146,7 +146,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(LOG_TAG, databaseError.toString());
             }
         });
     }
@@ -176,7 +176,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(LOG_TAG, databaseError.toString());
             }
         });
     }
