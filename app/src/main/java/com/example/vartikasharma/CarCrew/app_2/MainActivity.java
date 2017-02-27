@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-
 
 import com.example.vartikasharma.carcrew.Conf;
 import com.example.vartikasharma.carcrew.DataObject;
