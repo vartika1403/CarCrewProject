@@ -103,36 +103,44 @@ public class MainActivity extends AppCompatActivity {
     private void openDialog() {
         Log.i(LOG_TAG, " no clicked , " + "yes");
 
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
 
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Do you want to fill the data for open queries");
-        builder1.setCancelable(true);
+        // Setting Dialog Title
+        alertDialog.setTitle("Confirm Enquiers...");
 
-        builder1.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
-                        startActivity(intent);
-                        finish();
-                        // alert11.dismiss();
+        // Setting Dialog Message
+        alertDialog.setMessage("Do you want to fill the open enquieries");
 
-                        dialog.dismiss();
-                        dialog.cancel();
-                    }
-                });
+        // Setting Icon to Dialog
+      //  alertDialog.setIcon(R.drawable.delete);
 
-        builder1.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        //alert11.dismiss();
-                        dialog.dismiss();
-                        Log.i(LOG_TAG, " no clicked , " + dialog);
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
 
-                    }
-                });
+                // Write your code here to invoke YES event
+                dialog.dismiss();
+                dialog.cancel();
+                //Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
+                Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
+                startActivity(intent);
+                //finish();
+                Toast.makeText(getApplicationContext(), "You clicked on YES", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to invoke NO event
+                Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+
     }
 
     private void saveDataEnteredToFirebase() {
@@ -277,5 +285,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onStop () {
+//do your stuff here
+
+        super.onStop();
+    }
+
 }
 

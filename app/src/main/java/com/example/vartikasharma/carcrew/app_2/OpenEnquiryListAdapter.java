@@ -130,7 +130,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         Log.i(LOG_TAG, "firebaseDataUri, " + firebaseOpenDataURi);
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(firebaseOpenDataURi);
-        databaseRef.addValueEventListener(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -149,6 +149,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                     }
                 } else {
                     Log.e(LOG_TAG, "error in getting data");
+                    return;
                 }
             }
 
