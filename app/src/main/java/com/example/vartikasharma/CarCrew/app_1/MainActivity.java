@@ -1,5 +1,6 @@
 package com.example.vartikasharma.carcrew.app_1;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private List<DataObject> listItem = new ArrayList<>();
     private List<DataObject> openListItem = new ArrayList<>();
     private EnquiryListAdapter enquiryListAdapter;
-    private boolean isOpenListItemPresent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.confirm_order)
     void confirmOrder() {
         // save data for the first time only
-        Log.i(LOG_TAG, " item data value, " + FirebaseDatabase.getInstance().getReference().child("open"));
         FirebaseDatabase.getInstance().getReference().child("open").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     saveDataEnteredToFirebase();
                 } else {
-                    Toast.makeText(MainActivity.this, "Fill the remaining data for enquieries", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Fill the remaining data for enquiries", Toast.LENGTH_LONG).show();
+                    openNextActivity();
                 }
             }
 
@@ -97,7 +97,13 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference reference = usersRef.push();
             reference.setValue(openListItem.get(i));
         }
-        Toast.makeText(MainActivity.this, "Fill the remaining data for enquieries", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "Fill the remaining data for enquiries", Toast.LENGTH_LONG).show();
+        openNextActivity();
+    }
+
+    private void openNextActivity() {
+        Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
+        startActivity(intent);
     }
 
     private void fetchDataFromFirebase() {
@@ -140,14 +146,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOG_TAG, "error in getting data");
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(),
-                            "Sorry could' nt get the data", Toast.LENGTH_SHORT).show();
+                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(LOG_TAG, databaseError.toString());
             }
         });
     }
@@ -193,12 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 } else {
                     Log.i(LOG_TAG, "response is not successful");
                 }
-
             }
         });
     }
