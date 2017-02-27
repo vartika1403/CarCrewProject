@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
@@ -24,7 +23,6 @@
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:textColor="@color/textColor"
-            android:text="Enquiry "
             android:textSize="12sp" />
 
         <TextView
@@ -37,7 +35,6 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:textColor="@color/textColor"
-            android:text="Garage Name"
             android:textSize="12sp" />
 
 </RelativeLayout>
@@ -65,7 +62,6 @@
             android:layout_marginTop="5dp"
             android:lines="2"
             android:maxWidth="120dp"
-            android:text="Part Name:"
             android:textSize="12sp"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
@@ -75,7 +71,6 @@
 
         <TextView
             android:id="@+id/car_name"
-            android:text="For: Car Name:"
             android:textColor="@color/textBrandNameColor"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
@@ -91,7 +86,6 @@
 
         <TextView
             android:id="@+id/in_stock"
-            android:text="In Stock"
             android:textColor="@color/textBrandNameColor"
             android:layout_marginTop="2dp"
             android:textSize="12sp"
@@ -115,7 +109,7 @@
             android:layout_height="35dp">
         <EditText
             android:id="@+id/brand_name_text"
-            android:hint="Brand Name"
+            android:hint="@string/brand_name_hint_text"
             android:inputType="text"
             android:textSize="12sp"
             android:layout_width="wrap_content"
@@ -130,10 +124,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
-            android:text="OEM"
             android:textSize="12sp"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rectangle_8" />
+            android:background="@drawable/open_oem_button" />
 
         <Button
             android:id="@+id/text_open_status_button"
@@ -141,12 +134,11 @@
             android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="OEM"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:layout_below="@id/text_oem_status_button"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rectangle_8" />
+            android:background="@drawable/open_oem_button" />
 
         <Button
             android:id="@+id/submit_button"
@@ -157,7 +149,7 @@
             android:textSize="12sp"
             android:layout_below="@id/text_open_status_button"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rectangle_8"
+            android:background="@drawable/open_oem_button"
             android:layout_width="95dp"
             android:layout_height="35dp" />
         

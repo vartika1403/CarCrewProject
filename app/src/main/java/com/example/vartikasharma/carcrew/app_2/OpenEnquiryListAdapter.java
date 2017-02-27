@@ -70,7 +70,6 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         holder.vendorDetails.removeAllViews();
         final List<EditText> mrpValue = new ArrayList<>();
         mrpValue.clear();
-        Log.i(LOG_TAG, "mrp value, " + mrpValue.size());
         for (int i = 0; i < 3; i++) {
             loadVendorList(holder.vendorDetails, mrpValue);
         }
@@ -80,8 +79,6 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
             public void onClick(View view) {
 
                 String brandname = holder.textBrandName.getText().toString();
-                Log.i(LOG_TAG, "brand name" + brandname);
-                Log.i(LOG_TAG, "mrp value size, " + mrpValue.size());
                 String mrpValueText = mrpValue.get(0).getText().toString();
                 Double minMrpValue = 0.0;
                 if (!mrpValueText.isEmpty()) {
@@ -93,17 +90,14 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                     if (!valueText.isEmpty()) {
                         value = Double.parseDouble(valueText);
                     }
-                    Log.i(LOG_TAG, "value , " + value);
                     if (minMrpValue != 0.0 && value != 0.0 && minMrpValue > value) {
                         minMrpValue = value;
-                        Log.i(LOG_TAG, "minMrpValue , " + minMrpValue);
                     } else if (minMrpValue == 0.0 && value != 0.0) {
                         minMrpValue = value;
                     }
                 }
                 //this call will update the existing data list with new data
                 if (minMrpValue != 0.0 && !brandname.isEmpty()) {
-                    Log.i(LOG_TAG, "brand value, " + brandname);
                     dataObject.setBrand_Name(brandname);
                     dataObject.setPart_MRP(minMrpValue);
                     holder.submitButton.setText("SUBMIT SUCCESSFULLY");
@@ -127,7 +121,6 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
 
     private void removeDataFromOpenList(final DataObject dataObject, final int position) {
         String firebaseOpenDataURi = Conf.firebaseUserOpenQueries();
-        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseOpenDataURi);
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(firebaseOpenDataURi);
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -137,9 +130,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         DataObject data = ds.getValue(DataObject.class);
                         int enquiryItemId = data.getEnquiry_Item_ID();
-                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
                         String key = ds.getKey();
-                        Log.i(LOG_TAG, "key, " + key);
                         if (enquiryItemId == dataObject.getEnquiry_Item_ID()) {
                             Log.i(LOG_TAG, "query open key, " + databaseRef.child(key));
                             databaseRef.child(key).removeValue();
@@ -162,25 +153,17 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
 
     private void updateDataValueForEnquiries(final DataObject openListObject, final int position) {
         String firebaseDataUri = Conf.firebaseUserDataURI();
-        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(firebaseDataUri);
-        Log.i(LOG_TAG, "enquiry id , " + openListObject.getEnquiry_Item_ID());
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Log.i(LOG_TAG, "datacount, " + dataSnapshot.getChildrenCount());
                         DataObject data = ds.getValue(DataObject.class);
                         int enquiryItemId = data.getEnquiry_Item_ID();
-                        Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
-                        Log.i(LOG_TAG, "enquiry itemid, " + openListObject.getEnquiry_Item_ID());
-
                         String key = ds.getKey();
-                        Log.i(LOG_TAG, "key, " + key);
                         if (enquiryItemId == openListObject.getEnquiry_Item_ID()) {
-                            Log.i(LOG_TAG, "query key, " + dataRef.child(key));
                             dataRef.child(key).setValue(openListObject);
                             removeDataFromOpenList(openListObject, position);
                         }
@@ -200,10 +183,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
 
     private void loadVendorList(LinearLayout vendorDetails, final List<EditText> mrpValue) {
         View view = LayoutInflater.from(context).inflate(R.layout.vendor_detail_layout, vendorDetails, false);
-        EditText vendor_name = (EditText) view.findViewById(R.id.vendor_name);
         final EditText mrp_value = (EditText) view.findViewById(R.id.mrp_value);
-        EditText cp_value = (EditText) view.findViewById(R.id.cp_value);
-        EditText sp_value = (EditText) view.findViewById(R.id.sp_value);
         mrpValue.add(mrp_value);
         vendorDetails.addView(view);
     }

@@ -16,12 +16,11 @@ import com.example.vartikasharma.carcrew.R;
 import java.util.List;
 
 public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.ViewHolder> {
-    private Context context;
     private LayoutInflater inflater;
     private List<DataObject> objects;
 
     public EnquiryListAdapter(Context context, List<DataObject> objects) {
-        this.context = context;
+        Context context1 = context;
         this.objects = objects;
         inflater = LayoutInflater.from(context);
     }
@@ -29,7 +28,6 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.item_layout, parent, false);
-
         return new ViewHolder(itemView);
     }
 
@@ -44,7 +42,7 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
         if (dataObject.getPart_Flag() == 2) {
             holder.oemStatus.setText("OES");
         } else {
-            holder. oemStatus.setText("OEM");
+            holder.oemStatus.setText("OEM");
         }
         if (dataObject.getEnquiry_Item_Status() == 0 || dataObject.getEnquiry_Item_Status() == 3) {
             holder.openStatus.setText("OPEN");
@@ -83,7 +81,6 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
             openStatus = (Button) view.findViewById(R.id.open_button);
             enquiryId = (TextView) view.findViewById(R.id.enquiry_id);
             garageName = (TextView) view.findViewById(R.id.garage_name);
-
         }
     }
 }

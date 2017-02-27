@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchItems() {
         String firebaseOpenDataUri = Conf.firebaseUserOpenQueries();
-        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseOpenDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().
                 getReferenceFromUrl(firebaseOpenDataUri);
 
@@ -53,14 +52,10 @@ public class MainActivity extends AppCompatActivity {
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long dataCount = dataSnapshot.getChildrenCount();
-                Log.i(LOG_TAG, "dataCount, " + dataCount);
-
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     DataObject dataobject = data.getValue(DataObject.class);
                     if (dataobject != null) {
                         openEnquiryItemList.add(dataobject);
-
                     }
                 }
                 openEnquiryListAdapter = new OpenEnquiryListAdapter(MainActivity.this, openEnquiryItemList);
@@ -72,10 +67,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-       finish();
     }
 }

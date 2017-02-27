@@ -1,19 +1,13 @@
 package com.example.vartikasharma.carcrew.app_1;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -57,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbarApp1;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    private List<DataObject> dataObject = new ArrayList<>();
     private List<DataObject> listItem = new ArrayList<>();
     private List<DataObject> openListItem = new ArrayList<>();
     private EnquiryListAdapter enquiryListAdapter;
@@ -73,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbarApp1);
 
         fetchDataFromFirebase();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -85,11 +77,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
-                    Log.i(LOG_TAG, " item data value ok , " + FirebaseDatabase.getInstance().getReference().child("open"));
                     saveDataEnteredToFirebase();
-
                 } else {
-                    openDialog();
+                    Toast.makeText(MainActivity.this, "Fill the remaining data for enquieries", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -100,68 +90,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openDialog() {
-        Log.i(LOG_TAG, " no clicked , " + "yes");
-
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-
-        // Setting Dialog Title
-        alertDialog.setTitle("Confirm Enquiers...");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("Do you want to fill the open enquieries");
-
-        // Setting Icon to Dialog
-      //  alertDialog.setIcon(R.drawable.delete);
-
-        // Setting Positive "Yes" Button
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-
-                // Write your code here to invoke YES event
-                dialog.dismiss();
-                dialog.cancel();
-                //Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
-                Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
-                startActivity(intent);
-                //finish();
-                Toast.makeText(getApplicationContext(), "You clicked on YES", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Setting Negative "NO" Button
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Write your code here to invoke NO event
-                Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-                dialog.cancel();
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
-
-    }
-
     private void saveDataEnteredToFirebase() {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("open");
-        Log.i(LOG_TAG, "open list item count, " + openListItem.size());
         for (int i = 0; i < openListItem.size(); i++) {
             DatabaseReference reference = usersRef.push();
-            Log.i(LOG_TAG, "refernce, " + reference);
             reference.setValue(openListItem.get(i));
         }
-        openDialog();
+        Toast.makeText(MainActivity.this, "Fill the remaining data for enquieries", Toast.LENGTH_LONG).show();
     }
 
     private void fetchDataFromFirebase() {
         String firebaseDataUri = Conf.firebaseUserDataURI();
-        Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().
                 getReferenceFromUrl(firebaseDataUri);
-        Log.i(LOG_TAG, "dataRef, " + dataRef);
 
         openListItem.clear();
         listItem.clear();
@@ -170,13 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    long dataCount = dataSnapshot.getChildrenCount();
-                    Log.i(LOG_TAG, "dataCount, " + dataCount);
-
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        Log.i(LOG_TAG, "data value, " + data.getValue());
-                        Log.i(LOG_TAG, "data value, " + data.getKey());
-
                         DataObject item = data.getValue(DataObject.class);
                         if (item != null) {
                             listItem.add(item);
@@ -185,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                             if (item.getCar_Name() == null || item.getBrand_Name() == null ||
                                     item.getPart_Name().isEmpty()
                                     || item.getQuantity_In_Stock() == 0) {
-                                Log.i(LOG_TAG, "open item, " + item.getEnquiry_Item_ID());
                                 openListItem.add(item);
                             }
                         }
@@ -196,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     enquiryListAdapter = new EnquiryListAdapter(MainActivity.this, listItem);
                     enquiryList.setAdapter(enquiryListAdapter);
                 } else {
+                    // api call to fetch data from URL, if data nt present in firebase
                     try {
                         fetchData();
                     } catch (IOException | JSONException e) {
@@ -225,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Request request, IOException e) {
                 Toast.makeText(getApplicationContext(), "Can't fetch data", Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -244,12 +179,8 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         assert json != null;
                         jsonArray = json.getJSONArray("data");
-                        Log.i(LOG_TAG, "jsonArray," + jsonArray);
-                        Log.i(LOG_TAG, "length, " + jsonArray.length());
                         for (int i = 0; i < jsonArray.length(); i++) {
                             listItem = Arrays.asList(gson.fromJson(jsonArray.toString(), DataObject[].class));
-                            Log.i(LOG_TAG, "dataobject, " + listItem);
-                            Log.i(LOG_TAG, "first dataObject, " + listItem.get(i).getCar_Name());
                             if (listItem.get(i).getCar_Name() == null ||
                                     listItem.get(i).getBrand_Name() == null ||
                                     listItem.get(i).getPart_Name().isEmpty() ||
@@ -257,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                                 openListItem.add(listItem.get(i));
                             }
                         }
-
+                        // write value to the firbase in data uri
                         addValueToFirebase();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -274,24 +205,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void addValueToFirebase() {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("data");
         for (int i = 0; i < listItem.size(); i++) {
             DatabaseReference reference = usersRef.push();
-            Log.i(LOG_TAG, "refernce, " + reference);
             reference.setValue(listItem.get(i));
-            Log.i(LOG_TAG, "referncevalue, " + reference);
-
         }
-
     }
-
-    @Override
-    public void onStop () {
-//do your stuff here
-
-        super.onStop();
-    }
-
 }
 
