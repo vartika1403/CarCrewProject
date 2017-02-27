@@ -1,14 +1,19 @@
 package com.example.vartikasharma.carcrew.app_1;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -67,17 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbarApp1);
 
-        isOpenListItemPresent = false;
-        if (listItem == null) {
-            Log.i(LOG_TAG, "firebase data, " + FirebaseDatabase.getInstance().getReference().child("data"));
-            try {
-                fetchData();
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            fetchDataFromFirebase();
-        }
+        fetchDataFromFirebase();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -91,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                 if (!dataSnapshot.exists()) {
                     Log.i(LOG_TAG, " item data value ok , " + FirebaseDatabase.getInstance().getReference().child("open"));
                     saveDataEnteredToFirebase();
+
                 } else {
-                    Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
-                    startActivity(intent);
+                    openDialog();
                 }
             }
 
@@ -104,19 +100,52 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void openDialog() {
+        Log.i(LOG_TAG, " no clicked , " + "yes");
+
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Do you want to fill the data for open queries");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
+                        startActivity(intent);
+                        finish();
+                        // alert11.dismiss();
+
+                        dialog.dismiss();
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        //alert11.dismiss();
+                        dialog.dismiss();
+                        Log.i(LOG_TAG, " no clicked , " + dialog);
+
+                    }
+                });
+    }
+
     private void saveDataEnteredToFirebase() {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("open");
         Log.i(LOG_TAG, "open list item count, " + openListItem.size());
-        isOpenListItemPresent = true;
         for (int i = 0; i < openListItem.size(); i++) {
             DatabaseReference reference = usersRef.push();
             Log.i(LOG_TAG, "refernce, " + reference);
             reference.setValue(openListItem.get(i));
         }
-        Intent intent = new Intent("com.example.vartikasharma.carcrew.app_2.intent.action.Launch");
-        startActivity(intent);
+        openDialog();
     }
 
     private void fetchDataFromFirebase() {
@@ -144,10 +173,9 @@ public class MainActivity extends AppCompatActivity {
                         if (item != null) {
                             listItem.add(item);
                         }
-                        if (item != null && !isOpenListItemPresent) {
-                            Log.i(LOG_TAG, " item data value, " + isOpenListItemPresent);
+                        if (item != null) {
                             if (item.getCar_Name() == null || item.getBrand_Name() == null ||
-                                    item.getFinal_Price() == 0.0 || item.getPart_Name().isEmpty()
+                                    item.getPart_Name().isEmpty()
                                     || item.getQuantity_In_Stock() == 0) {
                                 Log.i(LOG_TAG, "open item, " + item.getEnquiry_Item_ID());
                                 openListItem.add(item);
@@ -160,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
                     enquiryListAdapter = new EnquiryListAdapter(MainActivity.this, listItem);
                     enquiryList.setAdapter(enquiryListAdapter);
                 } else {
+                    try {
+                        fetchData();
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
                     Log.e(LOG_TAG, "error in getting data");
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(),
@@ -209,8 +242,9 @@ public class MainActivity extends AppCompatActivity {
                             listItem = Arrays.asList(gson.fromJson(jsonArray.toString(), DataObject[].class));
                             Log.i(LOG_TAG, "dataobject, " + listItem);
                             Log.i(LOG_TAG, "first dataObject, " + listItem.get(i).getCar_Name());
-                            if (listItem.get(i).getCar_Name() == null || listItem.get(i).getBrand_Name() == null ||
-                                    listItem.get(i).getFinal_Price() == 0.0 || listItem.get(i).getPart_Name().isEmpty() ||
+                            if (listItem.get(i).getCar_Name() == null ||
+                                    listItem.get(i).getBrand_Name() == null ||
+                                    listItem.get(i).getPart_Name().isEmpty() ||
                                     listItem.get(i).getQuantity_In_Stock() == 0) {
                                 openListItem.add(listItem.get(i));
                             }
@@ -234,12 +268,14 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Log.i(LOG_TAG, "ref, " + ref);
         DatabaseReference usersRef = ref.child("data");
-        for (int i = 0; i < dataObject.size(); i++) {
+        for (int i = 0; i < listItem.size(); i++) {
             DatabaseReference reference = usersRef.push();
             Log.i(LOG_TAG, "refernce, " + reference);
-            reference.setValue(dataObject.get(i));
+            reference.setValue(listItem.get(i));
             Log.i(LOG_TAG, "referncevalue, " + reference);
 
         }
+
     }
 }
+

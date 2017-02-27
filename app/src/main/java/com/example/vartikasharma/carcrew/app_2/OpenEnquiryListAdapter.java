@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -103,15 +102,30 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                     }
                 }
                 //this call will update the existing data list with new data
-                updateDataValueForEnquiries(minMrpValue, brandname, dataObject,
-                        holder.textOpenStatus, holder.submitButton);
-                //this call will remove closed items from open list
-                removeDataFromOpenList(dataObject);
+                if (minMrpValue != 0.0 && !brandname.isEmpty()) {
+                    Log.i(LOG_TAG, "brand value, " + brandname);
+                    dataObject.setBrand_Name(brandname);
+                    dataObject.setPart_MRP(minMrpValue);
+                    holder.submitButton.setText("SUBMIT SUCCESSFULLY");
+                    dataObject.setEnquiry_Item_Status(1);
+                    holder.textOpenStatus.setText("CLOSE");
+                    holder.submitButton.setEnabled(false);
+                    objectList.remove(position);
+                    objectList.remove(dataObject);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, objectList.size());
+                    updateDataValueForEnquiries(dataObject, position);
+                    //this call will remove closed items from open list
+                } else {
+                    Log.e(LOG_TAG, "please fill the values");
+                    Toast.makeText(context, "Please fill values", Toast.LENGTH_LONG).show();
+                    return;
+                }
             }
         });
     }
 
-    private void removeDataFromOpenList(final DataObject dataObject) {
+    private void removeDataFromOpenList(final DataObject dataObject, final int position) {
         String firebaseOpenDataURi = Conf.firebaseUserOpenQueries();
         Log.i(LOG_TAG, "firebaseDataUri, " + firebaseOpenDataURi);
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance()
@@ -129,13 +143,12 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                         if (enquiryItemId == dataObject.getEnquiry_Item_ID()) {
                             Log.i(LOG_TAG, "query open key, " + databaseRef.child(key));
                             databaseRef.child(key).removeValue();
+                            return;
+
                         }
                     }
                 } else {
                     Log.e(LOG_TAG, "error in getting data");
-                    Toast.makeText(context,
-                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
 
@@ -146,51 +159,33 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         });
     }
 
-    private void updateDataValueForEnquiries(final Double min, final String brandname,
-                                             final DataObject openListObject, final Button openButton, final Button submitButton) {
+    private void updateDataValueForEnquiries(final DataObject openListObject, final int position) {
         String firebaseDataUri = Conf.firebaseUserDataURI();
         Log.i(LOG_TAG, "firebaseDataUri, " + firebaseDataUri);
         final DatabaseReference dataRef = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(firebaseDataUri);
-        // check atleast one mrp value is present or not
-        //  check brand name is present or not
-        if (min != 0.0 && !brandname.isEmpty()) {
-            Log.i(LOG_TAG, "brand value, " + brandname);
-            openListObject.setBrand_Name(brandname);
-            submitButton.setText("SUBMIT SUCCESSFULLY");
-            openListObject.setEnquiry_Item_Status(1);
-            openButton.setText("CLOSE");
-            submitButton.setEnabled(false);
-        } else {
-            Log.e(LOG_TAG, "please fill the values");
-            Toast.makeText(context, "Please fill values", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         Log.i(LOG_TAG, "enquiry id , " + openListObject.getEnquiry_Item_ID());
-        final Query queryRef = dataRef.orderByChild("enquiry_item_id").equalTo(openListObject.getEnquiry_Item_ID());
-        Log.i(LOG_TAG, "queryRef, " + queryRef.getRef());
-        queryRef.getRef().addValueEventListener(new ValueEventListener() {
+        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Log.i(LOG_TAG, "datacount, " + dataSnapshot.getChildrenCount());
                         DataObject data = ds.getValue(DataObject.class);
                         int enquiryItemId = data.getEnquiry_Item_ID();
                         Log.i(LOG_TAG, "enquiry itemid, " + enquiryItemId);
+                        Log.i(LOG_TAG, "enquiry itemid, " + openListObject.getEnquiry_Item_ID());
+
                         String key = ds.getKey();
                         Log.i(LOG_TAG, "key, " + key);
                         if (enquiryItemId == openListObject.getEnquiry_Item_ID()) {
-                            Log.i(LOG_TAG, "query key, " + queryRef.getRef().child(key));
-                            queryRef.getRef().child(key).setValue(openListObject);
-                            //  Toast.makeText(context, "Saved Successfully", Toast.LENGTH_SHORT).show();
-
+                            Log.i(LOG_TAG, "query key, " + dataRef.child(key));
+                            dataRef.child(key).setValue(openListObject);
+                            removeDataFromOpenList(openListObject, position);
                         }
                     }
                 } else {
                     Log.e(LOG_TAG, "error in getting data");
-                    Toast.makeText(context,
-                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

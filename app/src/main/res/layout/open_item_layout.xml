@@ -52,6 +52,7 @@
 
         <ImageView
             android:id="@+id/open_item_pic"
+            android:layout_marginTop="4dp"
             android:layout_width="110dp"
             android:layout_height="110.8dp"
             android:background="@drawable/image_background"/>
@@ -105,8 +106,8 @@
         <FrameLayout
             android:layout_below="@id/in_stock"
             android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
             android:background="@color/itemTopBackground"
             android:layout_toRightOf="@id/open_item_pic"
             android:layout_toEndOf="@id/open_item_pic"
@@ -117,7 +118,6 @@
             android:hint="Brand Name"
             android:inputType="text"
             android:textSize="12sp"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -152,7 +152,7 @@
             android:id="@+id/submit_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="25dp"
             android:text="SUBMIT"
             android:textSize="12sp"
             android:layout_below="@id/text_open_status_button"

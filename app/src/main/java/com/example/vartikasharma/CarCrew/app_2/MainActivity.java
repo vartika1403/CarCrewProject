@@ -27,12 +27,10 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private List<DataObject> openEnquiryItemList = new ArrayList<>();
-    private OpenEnquiryListAdapter openEnquiryListAdapter;
-
     @BindView(R.id.open_enquiry_list)
     RecyclerView openEnquiryRecyclerView;
-
+    private List<DataObject> openEnquiryItemList = new ArrayList<>();
+    private OpenEnquiryListAdapter openEnquiryListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         openEnquiryRecyclerView.setLayoutManager(mLayoutManager);
-        
+
         fetchItems();
     }
 
@@ -74,5 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+       finish();
     }
 }

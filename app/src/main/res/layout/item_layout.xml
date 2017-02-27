@@ -149,14 +149,14 @@
 
             <ImageView
                 android:id="@+id/up_arrow"
-                android:layout_width="7dp"
-                android:layout_height="10.28dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/indian_rupee_symbol" />
+                android:src="@drawable/up_arrow" />
 
             <TextView
                 android:id="@+id/text_zero"
@@ -171,14 +171,14 @@
 
             <ImageView
                 android:id="@+id/down_arrow"
-                android:layout_width="7dp"
-                android:layout_height="10.28dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_toLeftOf="@id/text_zero"
                 android:layout_toStartOf="@id/text_zero"
-                android:src="@drawable/indian_rupee_symbol" />
+                android:src="@drawable/down_arrow" />
 
         </RelativeLayout>
 
@@ -198,6 +198,7 @@
             android:id="@+id/open_button"
             android:layout_width="40dp"
             android:layout_height="20dp"
+            android:gravity="center"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/oem_buttom"
