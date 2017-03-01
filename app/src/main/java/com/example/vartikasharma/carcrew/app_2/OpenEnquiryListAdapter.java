@@ -70,7 +70,7 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         }
 
         holder.textBrandName.getBackground().setColorFilter(Color.parseColor("#979797"), PorterDuff.Mode.SRC_IN);
-        if (!dataObject.getBrand_Name().isEmpty()) {
+        if (dataObject.getBrand_Name() != null && !dataObject.getBrand_Name().isEmpty()) {
             holder.textBrandName.setText(dataObject.getBrand_Name());
             holder.textBrandName.setEnabled(false);
         }

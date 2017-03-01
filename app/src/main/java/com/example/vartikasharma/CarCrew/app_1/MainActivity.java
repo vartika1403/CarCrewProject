@@ -1,5 +1,6 @@
 package com.example.vartikasharma.carcrew.app_1;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private List<DataObject> listItem = new ArrayList<>();
     private List<DataObject> openListItem = new ArrayList<>();
     private EnquiryListAdapter enquiryListAdapter;
+    private Dialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbarApp1);
 
-        fetchDataFromFirebase();
+        alertDialog = new Dialog(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 if (!dataSnapshot.exists()) {
                     saveDataEnteredToFirebase();
                 } else {
-                    Toast.makeText(MainActivity.this, "Fill the remaining data for enquiries", Toast.LENGTH_LONG).show();
                     openNextActivity();
                 }
             }
@@ -94,11 +95,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //refresh list
+        alertDialog.dismiss();
         fetchDataFromFirebase();
-        closeDialog();
-    }
-
-    private void closeDialog() {
     }
 
     private void saveDataEnteredToFirebase() {
@@ -108,15 +106,38 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference reference = usersRef.push();
             reference.setValue(openListItem.get(i));
         }
-        Toast.makeText(MainActivity.this, "Fill the remaining data for enquiries", Toast.LENGTH_LONG).show();
         openNextActivity();
     }
 
     private void openNextActivity() {
-        Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        openDialog();
+    }
+
+    private void openDialog() {
+        alertDialog.setContentView(R.layout.dialog);
+        alertDialog.setCancelable(true);
+
+        Button dialogYesButton = (Button) alertDialog.findViewById(R.id.yes_button_dialog);
+        Button dialogNoButton = (Button) alertDialog.findViewById(R.id.no_button_dialog);
+        // if button is clicked, close the custom dialog
+        dialogYesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                alertDialog.dismiss();
+            }
+        });
+
+        dialogNoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 
     private void fetchDataFromFirebase() {
@@ -133,15 +154,11 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         DataObject item = data.getValue(DataObject.class);
-                        Log.i(LOG_TAG, "data key," + data.getKey());
-                        Log.i(LOG_TAG, "item brand value," + item.getBrand_Name());
                         if (item != null) {
                             listItem.add(item);
-                        }
-                        if (item != null) {
                             if (item.getCar_Name() == null || item.getBrand_Name() == null ||
                                     item.getPart_Name().isEmpty()
-                                    || item.getQuantity_In_Stock() == 0) {
+                                    || item.getQuantity_In_Stock() == 0 || item.getPart_MRP() == 0.0) {
                                 openListItem.add(item);
                             }
                         }
@@ -152,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     enquiryListAdapter = new EnquiryListAdapter(MainActivity.this, listItem);
                     enquiryList.setAdapter(enquiryListAdapter);
                 } else {
-                    // api call to fetch data from URL, if data nt present in firebase
+                    // api call to fetch data from URL, if data not present in firebase
                     try {
                         fetchData();
                     } catch (IOException | JSONException e) {
@@ -161,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOG_TAG, "error in getting data");
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(),
-                            "Sorry could'nt get the data", Toast.LENGTH_SHORT).show();
+                            R.string.toast_err_msg_not_fecthing_data, Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -181,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                Toast.makeText(getApplicationContext(), "Can't fetch data", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_err_msg_fetch_data, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -205,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
                             if (listItem.get(i).getCar_Name() == null ||
                                     listItem.get(i).getBrand_Name() == null ||
                                     listItem.get(i).getPart_Name().isEmpty() ||
-                                    listItem.get(i).getQuantity_In_Stock() == 0) {
+                                    listItem.get(i).getQuantity_In_Stock() == 0 ||
+                                    listItem.get(i).getPart_MRP() == 0.0) {
                                 openListItem.add(listItem.get(i));
                             }
                         }

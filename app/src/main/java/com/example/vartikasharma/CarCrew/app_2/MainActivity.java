@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.example.vartikasharma.carcrew.Conf;
 import com.example.vartikasharma.carcrew.DataObject;
@@ -20,7 +21,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         openEnquiryRecyclerView.setLayoutManager(mLayoutManager);
-
-        fetchItems();
     }
 
     @Override
@@ -58,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     DataObject dataobject = data.getValue(DataObject.class);
-                    if (dataobject != null) {
-                        openEnquiryItemList.add(dataobject);
-                    }
+                    openEnquiryItemList.add(dataobject);
                 }
                 openEnquiryListAdapter = new OpenEnquiryListAdapter(MainActivity.this, openEnquiryItemList);
                 openEnquiryRecyclerView.setAdapter(openEnquiryListAdapter);
@@ -71,5 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, databaseError.toString());
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
