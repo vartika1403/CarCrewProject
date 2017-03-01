@@ -33,6 +33,9 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final DataObject dataObject = objects.get(position);
+        //refresh data
+        refreshDataForRecyclerView(holder);
+        //set data
         holder.partName.setText(dataObject.getPart_Name());
         holder.brandName.setText(dataObject.getBrand_Name());
         holder.carName.setText(dataObject.getCar_Name());
@@ -50,6 +53,27 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
         }
         holder.enquiryId.setText("Enquiry ID: " + dataObject.getEnquiry_Item_ID());
         holder.garageName.setText("Garage Name: " + dataObject.getGarage_Name());
+    }
+
+    private void refreshDataForRecyclerView(ViewHolder holder) {
+        holder.partName.invalidate();
+        holder.partName.setText("");
+        holder.garageName.invalidate();
+        holder.garageName.setText("");
+        holder.brandName.invalidate();
+        holder.brandName.setText("");
+        holder.carName.invalidate();
+        holder.carName.setText("");
+        holder.price.invalidate();
+        holder.price.setText("");
+        holder.inStock.invalidate();
+        holder.inStock.setText("");
+        holder.oemStatus.invalidate();
+        holder.oemStatus.setText("");
+        holder.openStatus.invalidate();
+        holder.openStatus.setText("");
+        holder.enquiryId.invalidate();
+        holder.enquiryId.setText("");
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -49,6 +50,9 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final DataObject dataObject = objectList.get(position);
+        // refresh data for recycler view
+        refreshDataForRecyclerView(holder);
+        // set data
         holder.openEnquiryId.setText("Enquiry Id: " + dataObject.getEnquiry_Item_ID());
         holder.openGarageName.setText("Garage Name: " + dataObject.getGarage_Name());
         holder.partName.setText(dataObject.getPart_Name());
@@ -66,18 +70,26 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
         }
 
         holder.textBrandName.getBackground().setColorFilter(Color.parseColor("#979797"), PorterDuff.Mode.SRC_IN);
-        holder.vendorDetails.invalidate();
-        holder.vendorDetails.removeAllViews();
+        if (!dataObject.getBrand_Name().isEmpty()) {
+            holder.textBrandName.setText(dataObject.getBrand_Name());
+            holder.textBrandName.setEnabled(false);
+        }
         final List<EditText> mrpValue = new ArrayList<>();
         mrpValue.clear();
         for (int i = 0; i < 3; i++) {
             loadVendorList(holder.vendorDetails, mrpValue);
         }
 
+
         holder.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                InputMethodManager inputManager = (InputMethodManager)
+                        context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(holder.textBrandName.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
                 String brandname = holder.textBrandName.getText().toString();
                 String mrpValueText = mrpValue.get(0).getText().toString();
                 Double minMrpValue = 0.0;
@@ -100,23 +112,41 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                 if (minMrpValue != 0.0 && !brandname.isEmpty()) {
                     dataObject.setBrand_Name(brandname);
                     dataObject.setPart_MRP(minMrpValue);
-                    holder.submitButton.setText("SUBMIT SUCCESSFULLY");
+                    holder.submitButton.setText(R.string.text_submit_successfully);
                     dataObject.setEnquiry_Item_Status(1);
                     holder.textOpenStatus.setText("CLOSE");
-                    holder.submitButton.setEnabled(false);
-                    objectList.remove(position);
-                    objectList.remove(dataObject);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, objectList.size());
                     updateDataValueForEnquiries(dataObject, position);
-                    //this call will remove closed items from open list
                 } else {
                     Log.e(LOG_TAG, "please fill the values");
-                    Toast.makeText(context, "Please fill values", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.toast_error_msg_fill_values, Toast.LENGTH_LONG).show();
                     return;
                 }
             }
         });
+    }
+
+    private void refreshDataForRecyclerView(MyViewHolder holder) {
+        holder.openEnquiryId.invalidate();
+        holder.openEnquiryId.setText("");
+        holder.openGarageName.invalidate();
+        holder.openGarageName.setText("");
+        holder.partName.invalidate();
+        holder.partName.setText("");
+        holder.carName.invalidate();
+        holder.carName.setText("");
+        holder.inStock.invalidate();
+        holder.inStock.setText("");
+        holder.textOesStatus.invalidate();
+        holder.textOesStatus.setText("");
+        holder.textOpenStatus.invalidate();
+        holder.textOpenStatus.setText("");
+        holder.textBrandName.invalidate();
+        holder.textBrandName.setText("");
+        holder.textBrandName.setEnabled(true);
+        holder.vendorDetails.invalidate();
+        holder.vendorDetails.removeAllViews();
+        holder.submitButton.invalidate();
+        holder.submitButton.setText(R.string.text_submit);
     }
 
     private void removeDataFromOpenList(final DataObject dataObject, final int position) {
@@ -132,10 +162,10 @@ public class OpenEnquiryListAdapter extends RecyclerView.Adapter<OpenEnquiryList
                         int enquiryItemId = data.getEnquiry_Item_ID();
                         String key = ds.getKey();
                         if (enquiryItemId == dataObject.getEnquiry_Item_ID()) {
-                            Log.i(LOG_TAG, "query open key, " + databaseRef.child(key));
                             databaseRef.child(key).removeValue();
+                            objectList.remove(dataObject);
+                            notifyDataSetChanged();
                             return;
-
                         }
                     }
                 } else {

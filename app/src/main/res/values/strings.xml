@@ -3,4 +3,12 @@
     <string name="app_2_name">app2</string>
     <string name="brand_name_hint_text">Brand Name</string>
     <string name="my_enquiry_text">MY ENQUIRY</string>
+    <string name="dialog_title_text">Do you want to fill data for open enquieries ?</string>
+    <string name="yes_text">Yes</string>
+    <string name="no_text">No</string>
+    <string name="toast_error_msg_fill_values">Please fill values</string>
+    <string name="text_submit_successfully">SUBMIT SUCCESSFULLY</string>
+    <string name="text_submit">SUBMIT</string>
+    <string name="toast_err_msg_not_fecthing_data">Sorry could\'nt get the data</string>
+    <string name="toast_err_msg_fetch_data">Can\'t fetch data</string>
 </resources>

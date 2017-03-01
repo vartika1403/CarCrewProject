@@ -11,4 +11,6 @@
     <color name="textBrandNameColor">#6c717a</color>
     <color name="toolbarColor">#ec1f27</color>
     <color name="editTextUnderline">#979797</color>
+    <color name="dialogTextColor">#3E80B4</color>
+    <color name="dialogButtonColor">#5DBCD2</color>
 </resources>
