@@ -90,6 +90,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //refresh list
+        fetchDataFromFirebase();
+        closeDialog();
+    }
+
+    private void closeDialog() {
+    }
+
     private void saveDataEnteredToFirebase() {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersRef = ref.child("open");
@@ -103,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void openNextActivity() {
         Intent intent = new Intent(MainActivity.this, com.example.vartikasharma.carcrew.app_2.MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     private void fetchDataFromFirebase() {
@@ -120,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         DataObject item = data.getValue(DataObject.class);
+                        Log.i(LOG_TAG, "data key," + data.getKey());
+                        Log.i(LOG_TAG, "item brand value," + item.getBrand_Name());
                         if (item != null) {
                             listItem.add(item);
                         }

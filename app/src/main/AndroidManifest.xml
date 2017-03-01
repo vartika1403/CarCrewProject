@@ -13,7 +13,8 @@
         <activity android:name="com.example.vartikasharma.carcrew.app_1.MainActivity"
             android:icon="@mipmap/ic_launcher"
             android:immersive="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.example.vartikasharma.carcrew.app_1.MainActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
@@ -28,7 +29,8 @@
             android:icon="@mipmap/ic_launcher"
             android:immersive="true"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.example.vartikasharma.carcrew.app_2.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

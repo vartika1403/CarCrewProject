@@ -40,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
         fetchItems();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //refresh list
+        fetchItems();
+    }
+
     private void fetchItems() {
         String firebaseOpenDataUri = Conf.firebaseUserOpenQueries();
         final DatabaseReference dataRef = FirebaseDatabase.getInstance().

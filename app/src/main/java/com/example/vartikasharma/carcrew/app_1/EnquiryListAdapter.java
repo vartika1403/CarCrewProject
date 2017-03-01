@@ -20,7 +20,6 @@ public class EnquiryListAdapter extends RecyclerView.Adapter<EnquiryListAdapter.
     private List<DataObject> objects;
 
     public EnquiryListAdapter(Context context, List<DataObject> objects) {
-        Context context1 = context;
         this.objects = objects;
         inflater = LayoutInflater.from(context);
     }
